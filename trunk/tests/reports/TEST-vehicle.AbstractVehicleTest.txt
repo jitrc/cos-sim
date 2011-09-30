@@ -1,5 +1,5 @@
 Testsuite: vehicle.AbstractVehicleTest
-Tests run: 2, Failures: 0, Errors: 0, Time elapsed: 0,012 sec
+Tests run: 2, Failures: 0, Errors: 0, Time elapsed: 0,011 sec
 
 Testcase: testActKinematics took 0,01 sec
 Testcase: testActLaneChanging took 0 sec

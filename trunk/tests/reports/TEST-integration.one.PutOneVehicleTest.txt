@@ -1,5 +1,5 @@
 Testsuite: integration.one.PutOneVehicleTest
-Tests run: 1, Failures: 0, Errors: 0, Time elapsed: 0,025 sec
+Tests run: 1, Failures: 0, Errors: 0, Time elapsed: 0,031 sec
 ------------- Standard Output ---------------
 WARNING: Could not bootstrap DUO Route Assignment Services: ru.cos.sim.services.RasDuoServicesBootstrapper
 *** Time: 0.0
@@ -644,4 +644,4 @@ JP13K:	X=98.84499	V=14.084445
 *** Time: 59.999657
 ------------- ---------------- ---------------
 
-Testcase: test took 0,024 sec
+Testcase: test took 0,031 sec
