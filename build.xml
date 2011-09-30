@@ -40,7 +40,7 @@
 	<target name="init">
 		<description>Create directories build-dir/java and distr-dir</description>
 		<mkdir dir="build/java"/>
-		<mkdir dir="distr"/>
+		<mkdir dir="assembly"/>
 		<mkdir dir="tests/build/java"/>
 	</target>
 	

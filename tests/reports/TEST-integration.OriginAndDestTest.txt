@@ -1,5 +1,5 @@
 Testsuite: integration.OriginAndDestTest
-Tests run: 1, Failures: 0, Errors: 0, Time elapsed: 0,176 sec
+Tests run: 1, Failures: 0, Errors: 0, Time elapsed: 0,203 sec
 ------------- Standard Output ---------------
 WARNING: Could not bootstrap DUO Route Assignment Services: ru.cos.sim.services.RasDuoServicesBootstrapper
 35.900024: X=0.0	V=8.333333
@@ -1268,4 +1268,4 @@ WARNING: Could not bootstrap DUO Route Assignment Services: ru.cos.sim.services.
 583.7045: X=99.74931	V=14.787989
 ------------- ---------------- ---------------
 
-Testcase: test took 0,175 sec
+Testcase: test took 0,203 sec

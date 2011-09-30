@@ -1,5 +1,5 @@
 Testsuite: road.init.ReadAndBuildTest
-Tests run: 2, Failures: 0, Errors: 0, Time elapsed: 0,01 sec
+Tests run: 2, Failures: 0, Errors: 0, Time elapsed: 0,013 sec
 
 Testcase: integrationTest took 0,004 sec
-Testcase: originDestinationNodesTest took 0,005 sec
+Testcase: originDestinationNodesTest took 0,007 sec
