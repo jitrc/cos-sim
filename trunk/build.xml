@@ -42,6 +42,7 @@
 		<mkdir dir="build/java"/>
 		<mkdir dir="assembly"/>
 		<mkdir dir="tests/build/java"/>
+		<mkdir dir="tests/reports"/>
 	</target>
 	
 	<target name="compile">
