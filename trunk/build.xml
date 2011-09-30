@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="simulation-engine" basedir="." default="make-all">
+
+
+	<property environment="env"/>
+	<property file="{$env.USERNAME}.properties"/>
+	<property file="build.properties"/>
+
+	<path id="classpath.junit">
+		<pathelement location="libs/junit-4.9b2.jar"/>
+	</path>
+	
+	<path id="classpath.compile">
+		<pathelement location="libs/lengthies.jar"/>
+		<pathelement location="libs/absf.jar"/>
+		<pathelement location="libs/utils.jar"/>
+		<pathelement location="libs/jdom.jar"/>
+		<pathelement location="libs/commons-io-2.0.1.jar"/>
+	</path>
+
+	
+	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+	  <classpath>
+	    <fileset dir="libs" includes="*.jar" excludes="ant.jar"/>
+	  </classpath>
+	</taskdef>	
+	
+	<target name="clean">
+		<description>Delete all contetns under build/java</description>
+		<delete failonerror="no" quiet="yes" defaultexcludes="false">
+			<fileset dir="build/java">
+				<include name="**/*"/>
+			</fileset>
+			<fileset dir="tests/build/java">
+				<include name="**/*"/>
+			</fileset>
+		</delete>
+	</target>
+	
+	<target name="init">
+		<description>Create directories build-dir/java and distr-dir</description>
+		<mkdir dir="build/java"/>
+		<mkdir dir="distr"/>
+		<mkdir dir="tests/build/java"/>
+	</target>
+	
+	<target name="compile">
+		<description>Compile sources and put results into build-dir</description>
+		<javac srcdir="src/java" destdir="build/java" debug="${compile.debug}">
+			<classpath>
+				<path refid="classpath.compile"/>
+			</classpath>
+		</javac>
+		<copy todir="build/java">
+			<fileset dir="src/java">
+				<include name="**/*.xml"/>
+			</fileset>
+		</copy>
+		<copy todir="build/java/ru/cos/sim/mdf/">
+			<fileset dir=".">
+				<include name="TrafficModel.xsd"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="make-all">
+		<description>Compile and assemble the project</description>
+		<antcall target="clean"/>
+		<antcall target="init"/>
+		<antcall target="compile"/>
+		<antcall target="compile-tests"/>
+		<antcall target="tests"/>
+		<antcall target="assemble"/>
+	</target>
+	
+	<target name="assemble">
+		<description>Make runable distributive</description>
+		<delete failonerror="no" quiet="yes">
+			<fileset dir="assembly">
+				<include name="**/*"/>
+			</fileset>
+		</delete>
+		
+		<antcall target="make-jar"/>
+		
+		<!-- copy all libs -->
+		<copy todir="assembly/libs">
+			<fileset dir="libs/">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		
+		<!-- copy engine.jar -->
+		<copy todir="assembly">
+			<fileset dir=".">
+				<include name="engine.jar"/>
+			</fileset>
+		</copy>
+		
+		<!-- generate launch files -->
+		<antcall target="generate-launch-files"/>
+		
+	</target>
+	
+	<target name="generate-launch-files">
+		<path id="jars-path">
+			<fileset dir="assembly">
+				<include name="*.jar"/>
+			</fileset>
+		</path>
+		<!--<path id="bp-bootstrap-jar-path">
+			<fileset dir="${java-assembly}">
+				<include name="vm-bootstrap.jar"/>
+			</fileset>
+		</path>
+		-->
+		<path id="windows-libs-path" >
+			<fileset dir="assembly">
+				<include name="libs/*"/>
+				<exclude name="*/jmeLinux.jar"/>
+			</fileset>
+		</path>
+		<path id="linux-libs-path" >
+			<fileset dir="assembly">
+				<include name="libs/*"/>
+				<exclude name="*/jmeLinux.jar"/>
+			</fileset>
+		</path>
+		<path id="absolute-project-path">
+			<pathelement path="assembly"/>
+		</path>
+		<pathconvert dirsep="/" pathsep=";" property="win-abs-proj-path" refid="absolute-project-path"/>
+		<pathconvert dirsep="/" pathsep=":" property="unix-abs-proj-path" refid="absolute-project-path"/>
+		
+		<pathconvert setonempty="true" property="windows-jars" refid="jars-path">
+			<map from="${win-abs-proj-path}" to="."/>
+		</pathconvert>
+		<pathconvert setonempty="true" dirsep="/" property="unix-jars" refid="jars-path">
+			<map from="${unix-abs-proj-path}" to="."/>
+		</pathconvert>
+		
+		<!--
+		<pathconvert setonempty="true" property="windows-bp-bootstrap-jar" refid="bp-bootstrap-jar-path">
+			<map from="${win-abs-proj-path}" to="."/>
+		</pathconvert>
+		<pathconvert setonempty="true" dirsep="/" property="unix-bp-bootstrap-jar" refid="bp-bootstrap-jar-path">
+			<map from="${unix-abs-proj-path}" to="."/>
+		</pathconvert>
+		-->
+		
+		<pathconvert setonempty="true" property="windows-classpath" refid="windows-libs-path">
+			<map from="${win-abs-proj-path}" to="."/>
+		</pathconvert>
+		<pathconvert setonempty="true" dirsep="/" pathsep=":" property="unix-classpath" refid="linux-libs-path">
+			<map from="${unix-abs-proj-path}" to="."/>
+		</pathconvert>
+
+		<echo file="assembly/launch.bat">start javaw -Djava.library.path=./libs -cp "${windows-classpath};${windows-jars};." ru.cos.main.Main</echo>
+		<echo file="assembly/launch.sh">java -Djava.library.path=. -cp "${unix-classpath}:${unix-jars}:." ru.cos.main.Main</echo>
+
+		<!--
+		<echo file="assembly/mapGenerator.bat">java -cp "${windows-classpath};${windows-jars};." ru.cos.traffic.verification.maps.MapGenerator %1 %2</echo>
+		<echo file="assembly/mapGenerator.sh">java -cp "${unix-classpath}:${unix-jars}:." ru.cos.traffic.verification.maps.MapGenerator $1 $2</echo>
+
+		<echo file="assembly/batchProcessor.bat">java -Xmx1g -cp "${windows-classpath};${windows-bp-bootstrap-jar};." -Dbp.classpath.modules="${windows-jars}" ru.cos.traffic.verification.bp.bootstrap.BatchProcessor %1 %2</echo>
+		<echo file="assembly/batchProcessor.sh">java -Xmx1g -cp "${unix-classpath}:${unix-bp-bootstrap-jar}:." -Dbp.classpath.modules="${unix-jars}" ru.cos.traffic.verification.bp.bootstrap.BatchProcessor $1 $2</echo>
+
+		<echo file="assembly/tsrViewer.bat">start javaw -Xms5m -Xmx128m -XX:MaxHeapFreeRatio=50 -XX:MinHeapFreeRatio=40 -cp "${windows-classpath};${windows-jars};." ru.cos.nissan.graphs.report.StandaloneReportViewer %1 %2</echo>
+		<echo file="assembly/tsrViewer.sh">java -Xms5m -Xmx128m -XX:MaxHeapFreeRatio=50 -XX:MinHeapFreeRatio=40 -cp "${unix-classpath}:${unix-jars}:." ru.cos.nissan.graphs.report.StandaloneReportViewer $1 $2</echo>
+		
+		<echo file="${assembly}/launchConsole.bat">start java -cp "${windows-classpath};." ru.cos.nissan.controller.cio.ConsoleController %1 %2</echo>
+		<echo file="${assembly}/launchConsole.sh">java -cp "${unix-classpath}:." ru.cos.nissan.controller.cio.ConsoleController $1 $2</echo>
+		-->
+		<chmod dir="assembly" perm="u+x" includes="**/*.sh"/>
+
+	</target>	
+	
+	<target name="make-jar">
+		<description>Make jar from compiled files</description>
+		<delete failonerror="no" quiet="yes">
+			<fileset dir="distr">
+				<include name="**/*"/>
+			</fileset>
+		</delete>
+		<jar destfile="assembly/engine.jar" >
+			<fileset dir="build/java">
+				<include name="**/*"/>
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="compile-tests">
+		<description>Compile tests and put results into test/build</description>
+		<javac srcdir="tests/src/java" destdir="tests/build/java" debug="${compile.debug}">
+			<classpath>
+				<path refid="classpath.junit"/>
+				<path refid="classpath.compile"/>
+				<pathelement location="build/java"/>
+			</classpath>
+		</javac>
+		<copy todir="tests/build/java">
+			<fileset dir="tests/src/java">
+				<include name="**/*"/>
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="tests" depends="compile-tests">
+		<description>Run all tests under tests/src/java</description>
+		<junit printsummary="yes" haltonfailure="yes">
+			<classpath>
+				<path refid="classpath.junit"/>
+				<path refid="classpath.compile"/>
+			    <pathelement location="tests/build/java"/>
+			    <pathelement location="build/java"/>
+			</classpath>
+			<formatter type="plain" />
+			<batchtest fork="no" todir="tests/reports">
+				<fileset dir="tests/src/java">
+					<include name="**/*.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+	
+	<target name="generateDataFromXSD">
+		<xjc destdir="src/java" package="ru.cos.sim.mdf.jaxb.data">
+			<schema file="TrafficModel.xsd"/>
+			<binding file="src/java/ru.cos.sim.mdf/jaxb/binding.xml"/>
+		</xjc>
+	</target>
+	
+</project>
