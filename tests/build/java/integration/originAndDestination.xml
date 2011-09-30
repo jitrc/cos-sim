@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<TrafficModel xmlns="http://traffic.cos.ru/cossim/TrafficModelDefinitionFile0.1">
+	<!-- 
+	Origin #1 -> Link #2 -> Destination #3
+	 -->
+	<RoadNetwork>
+		<Links>
+			<Link>
+				<id>2</id> <!-- unique link id -->
+				<sourceNodeId>1</sourceNodeId> <!-- id of the source node -->
+				<destinationNodeId>3</destinationNodeId> <!-- id of the destination node -->
+				<length>100.0</length> <!-- link length -->
+				<Segments>
+					<TrapeziumSegment>
+						<id>0</id> <!-- uniqie segment id in the link  -->
+						<length>100.0</length> <!-- Segment length -->
+						<prevSegmentId>-1</prevSegmentId> <!-- previous segment id or -1 if it is first segment in the link  -->
+						<nextSegmentId>-1</nextSegmentId> <!-- next segment id or -1 if it is last segment in the link -->
+						<Lanes>
+							<Lane>
+								<index>0</index> <!-- lane index, must starts with zero and incrementing for 1 for each next right lane -->
+								<length>100.0</length> <!-- lane length -->
+								<width>3.0</width> <!-- lane width -->
+								<prevLaneIndex>-1</prevLaneIndex> <!-- previous lane id or -1 if lane is beginning of the new lane or it is first segment in the link and therefore lane connects to the node -->
+								<nextLaneIndex>-1</nextLaneIndex> <!-- next lane id or -1 if lane is closed ahead or it is last segment in the link and therefore lane connects to the node -->
+							</Lane>
+						</Lanes>
+						<trapeziumShift>0.0</trapeziumShift>
+						<TrapeziumGeometry>
+							<LeftSide>
+								<Start>
+									<x>0</x>
+									<y>1</y>
+								</Start>
+								<End>
+									<x>100.0</x>
+									<y>1</y>
+								</End>
+							</LeftSide>
+							<RightSide>
+								<Start>
+									<x>0</x>
+									<y>-1</y>
+								</Start>
+								<End>
+									<x>100.0</x>
+									<y>-1</y>
+								</End>
+							</RightSide>
+						</TrapeziumGeometry>
+					</TrapeziumSegment>
+				</Segments>
+				<Waypoints>
+					<Waypoint>
+						<id>0</id>
+						<x>-11.188</x>
+						<y>-16.812</y>
+					</Waypoint>
+					<Waypoint>
+						<id>3</id>
+						<x>80.688</x>
+						<y>-16.188</y>
+					</Waypoint>
+				</Waypoints>
+			</Link>
+		</Links>
+		<Nodes>
+			<OriginNode>
+				<id>1</id>
+				<outgoingLinkId>2</outgoingLinkId>
+				<CircleGeometry>
+					<Center>
+						<x>0</x>
+						<y>0</y>
+					</Center>
+					<radius>3</radius>
+				</CircleGeometry>
+			</OriginNode>
+			<DestinationNode>
+				<id>3</id>
+				<incomingLinkId>2</incomingLinkId>
+				<CircleGeometry>
+					<Center>
+						<x>100</x>
+						<y>0</y>
+					</Center>
+					<radius>3</radius>
+				</CircleGeometry>
+			</DestinationNode>
+		</Nodes>
+	</RoadNetwork>
+	<Agents>
+		<Origins>
+			<Origin>
+				<originNodeId>1</originNodeId> <!-- id of an origin node in the ru.cos.sim.road network from which this agent will generate vehicles -->
+				<TimePeriods>
+					<TimePeriod>
+						<duration>3600</duration>
+						<numberOfVehicles>100</numberOfVehicles>
+						<Destinations>
+							<Destination>
+								<weight>1</weight>
+								<destinationNodeId>3</destinationNodeId>
+							</Destination>
+						</Destinations>
+						<VehicleProfiles>
+							<VehicleProfile>
+								<weight>1</weight>
+								<RegularVehicle>
+									<vehicleId>Test</vehicleId>
+									<length>4.5</length>
+									<width>2.5</width>
+									<class>Car</class>
+									<CompositeDriver>
+										<destinationNodeId>3</destinationNodeId>
+										<Route>1,2,3,4,5,6</Route>
+										<Parameters>
+											<!-- IDM parameters -->
+											<maxSpeed>15.0</maxSpeed>
+											<maxAcceleration>4.0</maxAcceleration>
+											<comfortDeceleration>2.0</comfortDeceleration>
+											<minDistance>2.0</minDistance>
+											<desiredHeadwayTime>2.0</desiredHeadwayTime>
+											<abruptness>4.0</abruptness>
+											<!-- MOBIL parameters -->
+											<politeness>0.5</politeness>
+											<accThreshold>0.5</accThreshold>
+											<!-- OLI parameter -->
+											<intersectionGapTime>3.0</intersectionGapTime>
+										</Parameters>
+									</CompositeDriver>
+								</RegularVehicle>
+							</VehicleProfile>
+						</VehicleProfiles>
+					</TimePeriod>
+				</TimePeriods>				
+			</Origin>
+		</Origins>
+	</Agents>
+</TrafficModel>
