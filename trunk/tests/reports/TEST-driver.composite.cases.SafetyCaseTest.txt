@@ -1,8 +1,0 @@
-Testsuite: driver.composite.cases.SafetyCaseTest
-Tests run: 2, Failures: 0, Errors: 0, Time elapsed: 0,404 sec
-------------- Standard Output ---------------
-WARNING: Could not bootstrap DUO Route Assignment Services: ru.cos.sim.services.RasDuoServicesBootstrapper
-------------- ---------------- ---------------
-
-Testcase: checkForSafetyTest took 0,016 sec
-Testcase: behaveTest took 0,373 sec
