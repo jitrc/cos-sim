@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="route-assignment-duo" basedir=".">
+	
+	<property name="ras-duo-dir" value="${basedir}"/>
+	<property name="ras-duo-build" value="${ras-duo-dir}/build"/>
+	<property name="ras-duo-assembly" value="${ras-duo-dir}/distr"/>
+	<property name="ras-duo-src" value="${ras-duo-dir}/src/java"/>
+	
+	<path id="ras-duo.compile.classpath">
+		<pathelement location="lib/absf.jar"/>
+		<pathelement location="lib/lengthies.jar"/>
+		<pathelement location="lib/vehicles.jar"/>
+	</path>
+	
+	<target name="clean">
+		<delete dir="${ras-duo-build}" failonerror="no" quiet="yes"/>
+		<delete dir="${ras-duo-assembly}" failonerror="no" quiet="yes"/>
+	</target>
+	
+	<target name="init" depends="clean">
+		<mkdir dir="${ras-duo-build}"/>
+		<mkdir dir="${ras-duo-assembly}"/>
+	</target>
+	
+	<target name="compile" depends="init">	
+		<javac srcdir="${ras-duo-src}" destdir="${ras-duo-build}" debug="${compile.debug}">
+			<classpath refid="ras-duo.compile.classpath"/> 
+		</javac>
+	</target>
+
+	<target name="assemble">
+		<jar destfile="${ras-duo-assembly}/ras-duo.jar" >
+			<fileset dir="${ras-duo-build}">
+				<include name="**/*"/>
+			</fileset>
+		</jar>
+	</target>
+
+</project>
