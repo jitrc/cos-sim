@@ -2,5 +2,5 @@
 
 = Traffic MicroSimulation =
 
-Read in details on Wikipedia
+Read in details in Wikipedia
 http://en.wikipedia.org/wiki/Microsimulation
