@@ -213,6 +213,11 @@
 	</target>
 	
 	<target name="make-javadoc">
+		  <delete includeemptydirs="true">
+		  	<fileset dir="docs/javadoc">
+		  		<include name="**/*"/>
+		  	</fileset>
+		  </delete>
 		  <javadoc 
 		           defaultexcludes="yes"
 		           destdir="docs/javadoc"
@@ -227,8 +232,8 @@
 			<sourcepath path="modules/engine/src/java"/>
 			<sourcepath path="modules/ras-duo/src/java"/>
 		  	<sourcepath path="modules/visualizer/src/java"/>
-		    <doctitle><![CDATA[<h1>COS.SIM Agent Baset Traffic Simulation</h1>]]></doctitle>
-		    <bottom><![CDATA[<i>Copyright &#169; 2011 COS&HT. All Rights Reserved.</i>]]></bottom>
+		    <doctitle><![CDATA[<h1>COS.SIM Agent Based Traffic Simulation</h1>]]></doctitle>
+		    <bottom><![CDATA[<i>Copyright &#169; 2011 COS&HT, www.traffic.cos.ru. All Rights Reserved.</i>]]></bottom>
 		    <tag name="todo" scope="all" description="To do:"/>
 		    <link href="http://download.oracle.com/javase/6/docs/api/"/>
 		    <link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>
@@ -263,21 +268,21 @@
 			<map from="${unix-abs-proj-path}" to="."/>
 		</pathconvert>
 
-		<echo file="distr/launch.bat">start javaw -Djava.library.path=./libs/native/windows -cp "${windows-classpath}" ru.cos.main.Main</echo>
-		<echo file="distr/launch.sh">java -Djava.library.path=./libs/native/linux -cp "${unix-classpath}" ru.cos.main.Main</echo>
+		<echo file="distr/launch.bat">start javaw -Djava.library.path=./libs/native/windows -cp "${windows-classpath}" ru.cos.sim.visualizer.main.Main</echo>
+		<echo file="distr/launch.sh">java -Djava.library.path=./libs/native/linux -cp "${unix-classpath}" ru.cos.sim.visualizer.main.Main</echo>
 
 		<!--
-		<echo file="assembly/mapGenerator.bat">java -cp "${windows-classpath};${windows-jars};." ru.cos.traffic.verification.maps.MapGenerator %1 %2</echo>
-		<echo file="assembly/mapGenerator.sh">java -cp "${unix-classpath}:${unix-jars}:." ru.cos.traffic.verification.maps.MapGenerator $1 $2</echo>
+		<echo file="assembly/mapGenerator.bat">java -cp "${windows-classpath};${windows-jars};." ru.cos.sim.visualizer.traffic.verification.maps.MapGenerator %1 %2</echo>
+		<echo file="assembly/mapGenerator.sh">java -cp "${unix-classpath}:${unix-jars}:." ru.cos.sim.visualizer.traffic.verification.maps.MapGenerator $1 $2</echo>
 
-		<echo file="assembly/batchProcessor.bat">java -Xmx1g -cp "${windows-classpath};${windows-bp-bootstrap-jar};." -Dbp.classpath.modules="${windows-jars}" ru.cos.traffic.verification.bp.bootstrap.BatchProcessor %1 %2</echo>
-		<echo file="assembly/batchProcessor.sh">java -Xmx1g -cp "${unix-classpath}:${unix-bp-bootstrap-jar}:." -Dbp.classpath.modules="${unix-jars}" ru.cos.traffic.verification.bp.bootstrap.BatchProcessor $1 $2</echo>
+		<echo file="assembly/batchProcessor.bat">java -Xmx1g -cp "${windows-classpath};${windows-bp-bootstrap-jar};." -Dbp.classpath.modules="${windows-jars}" ru.cos.sim.visualizer.traffic.verification.bp.bootstrap.BatchProcessor %1 %2</echo>
+		<echo file="assembly/batchProcessor.sh">java -Xmx1g -cp "${unix-classpath}:${unix-bp-bootstrap-jar}:." -Dbp.classpath.modules="${unix-jars}" ru.cos.sim.visualizer.traffic.verification.bp.bootstrap.BatchProcessor $1 $2</echo>
 
-		<echo file="assembly/tsrViewer.bat">start javaw -Xms5m -Xmx128m -XX:MaxHeapFreeRatio=50 -XX:MinHeapFreeRatio=40 -cp "${windows-classpath};${windows-jars};." ru.cos.nissan.graphs.report.StandaloneReportViewer %1 %2</echo>
-		<echo file="assembly/tsrViewer.sh">java -Xms5m -Xmx128m -XX:MaxHeapFreeRatio=50 -XX:MinHeapFreeRatio=40 -cp "${unix-classpath}:${unix-jars}:." ru.cos.nissan.graphs.report.StandaloneReportViewer $1 $2</echo>
+		<echo file="assembly/tsrViewer.bat">start javaw -Xms5m -Xmx128m -XX:MaxHeapFreeRatio=50 -XX:MinHeapFreeRatio=40 -cp "${windows-classpath};${windows-jars};." ru.cos.sim.visualizer.traffic.graphs.report.StandaloneReportViewer %1 %2</echo>
+		<echo file="assembly/tsrViewer.sh">java -Xms5m -Xmx128m -XX:MaxHeapFreeRatio=50 -XX:MinHeapFreeRatio=40 -cp "${unix-classpath}:${unix-jars}:." ru.cos.sim.visualizer.traffic.graphs.report.StandaloneReportViewer $1 $2</echo>
 		
-		<echo file="${assembly}/launchConsole.bat">start java -cp "${windows-classpath};." ru.cos.nissan.controller.cio.ConsoleController %1 %2</echo>
-		<echo file="${assembly}/launchConsole.sh">java -cp "${unix-classpath}:." ru.cos.nissan.controller.cio.ConsoleController $1 $2</echo>
+		<echo file="${assembly}/launchConsole.bat">start java -cp "${windows-classpath};." ru.cos.sim.visualizer.traffic.controller.cio.ConsoleController %1 %2</echo>
+		<echo file="${assembly}/launchConsole.sh">java -cp "${unix-classpath}:." ru.cos.sim.visualizer.traffic.controller.cio.ConsoleController $1 $2</echo>
 		-->
 		
 		<chmod dir="distr" perm="u+x" includes="**/*.sh"/>

@@ -204,7 +204,7 @@
 	<Agents>
 		<Vehicles>
 			<RegularVehicle>
-				<vehicleId>JP13K</vehicleId> <!-- unique ru.cos.sim.vehicle id, for example, ru.cos.sim.vehicle's plate number-->
+				<vehicleId>JP13K</vehicleId> <!-- unique ru.cos.sim.visualizer.sim.vehicle id, for example, ru.cos.sim.visualizer.sim.vehicle's plate number-->
 				<length>4.5</length>
 				<width>2.5</width>
 				<class>Car</class>
