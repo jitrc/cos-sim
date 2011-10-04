@@ -1,7 +1,0 @@
-Testsuite: ru.cos.cs.lengthy.impl.test.LengthyContinuousTest
-Tests run: 4, Failures: 0, Errors: 0, Time elapsed: 0,018 sec
-
-Testcase: testPutContinuous took 0,016 sec
-Testcase: testRemoveContinuous took 0 sec
-Testcase: testPutContinuousFromEndPoint took 0 sec
-Testcase: testMoveContinuous took 0 sec

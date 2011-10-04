@@ -1,8 +1,0 @@
-Testsuite: ru.cos.cs.lengthies.impl.test.LengthiesTest
-Tests run: 5, Failures: 0, Errors: 0, Time elapsed: 0,124 sec
-
-Testcase: testPutObservable took 0,042 sec
-Testcase: testRemoveObservable took 0 sec
-Testcase: testObserveForward took 0,004 sec
-Testcase: testMove took 0 sec
-Testcase: testObserveBackwad took 0,001 sec

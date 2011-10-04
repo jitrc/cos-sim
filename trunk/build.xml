@@ -62,9 +62,7 @@
 		<antcall target="engine-make-all"/>
 		<antcall target="ras-duo-make-all"/>
 		<antcall target="visualizer-make-all"/>
-		
 		<antcall target="make-distrib"></antcall>
-		
 	</target>
 
 	<target name="utils-make-all">
@@ -135,15 +133,84 @@
 	
 	<target name="clean">
 		<description>Clean project before commit to repository</description>
-		<delete failonerror="no" quiet="yes" defaultexcludes="false">
-			<fileset dir="build/java">
-				<include name="**/*"/>
-			</fileset>
-			<fileset dir="tests/build/java">
-				<include name="**/*"/>
+		<antcall target="utils-clean"/>
+		<antcall target="absf-clean"/>
+		<antcall target="lengthies-clean"/>
+		<antcall target="engine-clean"/>
+		<antcall target="ras-duo-clean"/>
+		<antcall target="visualizer-clean"/>
+		<delete includeemptydirs="true">
+			<fileset dir="${basedir}">
+		    	<include name="distr/**"/>
+		    	<include name="absf.jar"/>
+		    	<include name="utils.jar"/>
+   				<include name="lengthies.jar"/>
+   				<include name="engine.jar"/>
+   				<include name="visualizer.jar**"/>
+   				<include name="ras-duo.jar"/>
 			</fileset>
 		</delete>
 	</target>
+
+	<target name="utils-clean">
+		<description>Clean Utils project before commit</description>
+		<property name="name" value="utils"/>
+		<ant antfile="standard-build.xml" target="clean">
+			<property name="project.name" value="${name}"/>
+			<property name="project.dir" value="modules/${name}"/>
+			<reference refid="classpath" torefid="project.classpath" />
+		</ant>
+	</target>
+
+	<target name="absf-clean">
+		<description>Clean COS.ABSF project before commit</description>
+		<property name="name" value="absf"/>
+		<ant antfile="standard-build.xml" target="clean">
+			<property name="project.name" value="${name}"/>
+			<property name="project.dir" value="modules/${name}"/>
+			<reference refid="classpath" torefid="project.classpath" />
+		</ant>
+	</target>
+
+	<target name="lengthies-clean">
+		<description>Clean Lengthies project before commit</description>
+		<property name="name" value="lengthies"/>
+		<ant antfile="standard-build.xml" target="clean">
+			<property name="project.name" value="${name}"/>
+			<property name="project.dir" value="modules/${name}"/>
+			<reference refid="classpath" torefid="project.classpath" />
+		</ant>
+	</target>
+
+	<target name="engine-clean">
+		<description>Clean Traffic Simulation Engine project before commit</description>
+		<property name="name" value="engine"/>
+		<ant antfile="standard-build.xml" target="clean">
+			<property name="project.name" value="${name}"/>
+			<property name="project.dir" value="modules/${name}"/>
+			<reference refid="engine.classpath" torefid="project.classpath" />
+		</ant>
+	</target>
+
+	<target name="ras-duo-clean">
+		<description>Clean Route Assignment System (DUO) project before commit</description>
+		<property name="name" value="ras-duo"/>
+		<ant antfile="standard-build.xml" target="clean">
+			<property name="project.name" value="${name}"/>
+			<property name="project.dir" value="modules/${name}"/>
+			<reference refid="ras-duo.classpath" torefid="project.classpath" />
+		</ant>
+	</target>
+
+	<target name="visualizer-clean">
+		<description>Clean Visualizer project before commit</description>
+		<property name="name" value="visualizer"/>
+		<ant antfile="standard-build.xml" target="clean">
+			<property name="project.name" value="${name}"/>
+			<property name="project.dir" value="modules/${name}"/>
+			<reference refid="visualizer.classpath" torefid="project.classpath" />
+		</ant>
+	</target>	
 	
 	<target name="generate-launch-files">
 		<path id="jars-path">

@@ -23,15 +23,14 @@
 		<description>Clean task must delete all build, distr and another items in the 
 		project tree that are not related to source codes. I.e. it must prepeare 
 		modeule to be commited to the repository.</description>
-		 <delete includeemptydirs="true">
-		    <fileset dir="${project.dir}">
-		    	<include name="**/*"/>
-		    	<exclude name="src/**"/>
-		    	<exclude name="tests/**"/>
-		    	<exclude name="build.properties"/>
-    			<exclude name="build.xml"/>
+		<delete includeemptydirs="true">
+			<fileset dir="${project.dir}" defaultexcludes="false">
+		    	<include name="build/**"/>
+		    	<include name="tests/build/**"/>
+		    	<include name="tests/reports/**"/>
+		    	<include name="distr/**"/>
 		    </fileset>
-		  </delete>
+		</delete>
 	</target>
 	
 	<target name="init">
