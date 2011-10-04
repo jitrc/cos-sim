@@ -210,7 +210,30 @@
 			<property name="project.dir" value="modules/${name}"/>
 			<reference refid="visualizer.classpath" torefid="project.classpath" />
 		</ant>
-	</target>	
+	</target>
+	
+	<target name="make-javadoc">
+		  <javadoc 
+		           defaultexcludes="yes"
+		           destdir="docs/javadoc"
+		           author="true"
+		           version="true"
+		           use="true"
+		           windowtitle="COS.SIM Agent Baset Traffic Simulation"
+		  		   executable="${env.JAVA_HOME}/bin/javadoc">
+		  	<sourcepath path="modules/utils/src/java"/>
+		  	<sourcepath path="modules/absf/src/java"/>
+			<sourcepath path="modules/lengthies/src/java"/>
+			<sourcepath path="modules/engine/src/java"/>
+			<sourcepath path="modules/ras-duo/src/java"/>
+		  	<sourcepath path="modules/visualizer/src/java"/>
+		    <doctitle><![CDATA[<h1>COS.SIM Agent Baset Traffic Simulation</h1>]]></doctitle>
+		    <bottom><![CDATA[<i>Copyright &#169; 2011 COS&HT. All Rights Reserved.</i>]]></bottom>
+		    <tag name="todo" scope="all" description="To do:"/>
+		    <link href="http://download.oracle.com/javase/6/docs/api/"/>
+		    <link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>
+		  </javadoc>
+	</target>
 	
 	<target name="generate-launch-files">
 		<path id="jars-path">
