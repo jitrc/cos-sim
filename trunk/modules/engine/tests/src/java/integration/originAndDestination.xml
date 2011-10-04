@@ -93,7 +93,7 @@
 	<Agents>
 		<Origins>
 			<Origin>
-				<originNodeId>1</originNodeId> <!-- id of an origin node in the ru.cos.sim.road network from which this agent will generate vehicles -->
+				<originNodeId>1</originNodeId> <!-- id of an origin node in the ru.cos.sim.visualizer.sim.road network from which this agent will generate vehicles -->
 				<TimePeriods>
 					<TimePeriod>
 						<duration>3600</duration>
