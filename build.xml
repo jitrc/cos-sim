@@ -235,7 +235,7 @@
 	</target>
 	
 	<target name="make-javadoc">
-		  <delete dir="docs/javadoc" includeemptydirs="true" defaultexcludes="false">
+		  <delete dir="docs/javadoc" includeemptydirs="true">
 		  </delete>
 		  <javadoc 
 		           defaultexcludes="yes"
