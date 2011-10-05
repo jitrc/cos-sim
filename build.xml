@@ -35,10 +35,6 @@
 		<path location="engine.jar"/>
 	</path>
 
-	<target name="init">
-		<mkdir dir="distr"/>
-	</target>
-
 	<target name="make-distrib">
 		<mkdir dir="distr"/>
 		<copy todir="distr">
@@ -51,7 +47,33 @@
 				<include name="**/*"/>
 			</fileset>
 		</copy>
+		
+		<!-- Generate launch files -->
 		<antcall target="generate-launch-files"/>
+		
+		<!-- Create .version file -->
+		<property name="version.file" value="version.properties"/>
+		<!-- Read version.properties-->
+		<property file="${version.file}" prefix="version"/>
+		<property name="version.major" value="0"/>
+		<property name="version.minor" value="0"/>
+		<property name="version.release" value="0"/>
+		<property name="version.build" value="0"/>
+		<tstamp prefix="timestamp"/>
+		<!-- Write new version number to the version.properties -->
+		<propertyfile file="${version.file}">
+		    <entry key="major" value="${version.major}"/>
+		    <entry key="minor" value="${version.major}"/>
+		    <entry key="release" value="${version.major}"/>
+		    <entry key="build" type="int" default="0" operation="+"/>
+		</propertyfile>
+		<!-- Write to .version files -->
+		<propertyfile file="distr/.version">
+		    <entry key="Version" value="${version.major}.${version.minor}.${version.release}.${version.build}"/>
+		    <entry key="Build-date" value="${timestamp.DSTAMP} ${timestamp.TSTAMP} ${user.timezone}"/>
+		    <entry key="Builded-by" value="${user.name}"/>
+		</propertyfile>
+		
 	</target>
 	
 	<target name="make-all">
@@ -213,10 +235,7 @@
 	</target>
 	
 	<target name="make-javadoc">
-		  <delete includeemptydirs="true">
-		  	<fileset dir="docs/javadoc">
-		  		<include name="**/*"/>
-		  	</fileset>
+		  <delete dir="docs/javadoc" includeemptydirs="true" defaultexcludes="false">
 		  </delete>
 		  <javadoc 
 		           defaultexcludes="yes"
@@ -224,7 +243,7 @@
 		           author="true"
 		           version="true"
 		           use="true"
-		           windowtitle="COS.SIM Agent Baset Traffic Simulation"
+		           windowtitle="COS.SIM Agent Based Traffic Simulation"
 		  		   executable="${env.JAVA_HOME}/bin/javadoc">
 		  	<sourcepath path="modules/utils/src/java"/>
 		  	<sourcepath path="modules/absf/src/java"/>
