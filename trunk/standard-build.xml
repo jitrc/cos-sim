@@ -98,11 +98,40 @@
 	
 	<target name="make-jar">
 		<description>Create project's jar file from the compiled classes</description>
+		<property name="version.file" value="${project.dir}/version.properties"/>
+		<!-- Read version.properties-->
+		<property file="${version.file}" prefix="version"/>
+		<property name="version.major" value="0"/>
+		<property name="version.minor" value="0"/>
+		<property name="version.release" value="0"/>
+		<property name="version.build" value="0"/>
+		<tstamp prefix="timestamp"/>
 		<jar destfile="${project.dir}/distr/${project.name}.jar" >
 			<fileset dir="${project.dir}/build/java">
 				<include name="**/*"/>
 			</fileset>
+			<manifest>
+                <section name="Version">
+                    <attribute name="Version"
+                        value="${version.major}.${version.minor}.${version.release}.${version.build}"/>
+                    <attribute name="Build-timestamp"
+                        value="${timestamp.DSTAMP} ${timestamp.TSTAMP}"/>
+                    <attribute name="Build-user"
+                        value="${user.name}"/>
+                    <attribute name="Build-country"
+                        value="${user.country}"/>
+                    <attribute name="Build-timezone"
+                        value="${user.timezone}"/>
+                </section>
+			</manifest>
 		</jar>
+		<!-- Write new version number to the version.properties-->
+		<propertyfile file="${version.file}">
+		    <entry key="major" value="${version.major}"/>
+		    <entry key="minor" value="${version.major}"/>
+		    <entry key="release" value="${version.major}"/>
+		    <entry key="build" type="int" default="0" operation="+"/>
+		</propertyfile>
 	</target>
 	
 </project>
