@@ -21,7 +21,7 @@ import ru.cos.cs.lengthy.objects.Point;
 import ru.cos.cs.lengthy.objects.Point.PointType;
 import ru.cos.cs.lengthy.objects.continuous.Continuous;
 import ru.cos.cs.lengthy.objects.continuous.ContinuousPoint;
-import ru.cos.cs.lengthy.utils.Pair;
+import ru.cos.sim.utils.Pair;
 
 public abstract class LengthyImpl implements Lengthy {
 
