@@ -8,6 +8,12 @@ import ru.cos.sim.visualizer.traffic.core.SimulationSystemManager;
 
 public class CarForm extends TexturedRectangleShape {
 
+	//Values to normalize car width and length. We must do it due to
+	//texture is a square but vehicle has rectangle form. So real car picture 
+	//is only a part of the texture
+	private final float length_normalizer = 0.890625f;
+	private final float width_normalizer = 0.421875f;
+	
 	public float length = 3.5f*1.3f*0.4f;
 	public float width = 7.0f*0.5f*0.4f;
 	public static final String textureLocation = "/textures/vehicles/carBasic.png"; 
@@ -22,8 +28,8 @@ public class CarForm extends TexturedRectangleShape {
 	}
 	
 	public void setDimensions(float w , float l) {
-		length = l;///0.89f;
-		width = w;///0.582f;
+		length = l/ (2.0f * length_normalizer);
+		width = w / (2.0f * width_normalizer);
 		this.set(0, 0, length, 0, 0, width);
 	}
 
