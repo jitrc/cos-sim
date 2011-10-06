@@ -6,7 +6,6 @@ import ru.cos.cs.lengthy.Lengthy;
 
 /**
  * 
- * @param <L> type of lengthies on which this continuous can be placed on
  * @author zroslaw
  */
 public interface Continuous{
