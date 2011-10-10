@@ -2,7 +2,7 @@
 <project name="Standard Project for ${project.name}" default="make-all">
 
 	<!-- 
-	Followin properties must be set prior tasks running:
+	Following properties must be set prior tasks running:
 	* project.name - name of the project and jar file to be created
 	* project.dir - root project directory
 	* project.classpath - reference id for project classpath 

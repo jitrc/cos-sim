@@ -3,20 +3,18 @@
  */
 package ru.cos.sim.driver.composite.framework;
 
-import static ru.cos.sim.utils.Hand.*;
-
-import ru.cos.sim.driver.DriverException;
+import static ru.cos.sim.utils.Hand.Left;
+import static ru.cos.sim.utils.Hand.Right;
 import ru.cos.sim.utils.Hand;
 
 /**
  * 
  * @author zroslaw
  */
-public class RectangleCCRange implements CCRange, Cloneable {
+public class RectangleCCRange extends CCRange {
 	
 	/**
 	 * Range of torque values.
-	 * First number is lowest, second is largest in the range.
 	 */
 	protected FloatInterval accelerationRange = new FloatInterval();
 
@@ -25,35 +23,19 @@ public class RectangleCCRange implements CCRange, Cloneable {
 	 */
 	protected HandRange turnRange = new HandRange();
 	
-	/**
-	 * Priority of the range
-	 */
-	protected Priority priority = Priority.Lowest;
-	
 	@Override
 	public CCRange intersect(CCRange ccRange) {
 		if (ccRange==null) return this.clone();
 		RectangleCCRange recRange = (RectangleCCRange)ccRange;
-
-		int comparation = this.priority.compareTo(recRange.getPriority());
-		if (comparation<0) 
-			throw new DriverException("Priorities are not in order!");
 		
 		FloatInterval accelerationRange = 
 			this.accelerationRange.intersection(recRange.getAccelerationRange());
 		HandRange turnRange =
 			this.turnRange.intersection(recRange.getTurnRange());
-
-		if (accelerationRange.isEmpty() || turnRange.isEmpty()){
-			// intersection of ranges is empty
-			// therefore return this range because it has higher priority
-			return (CCRange) this.clone();
-		}
 		
 		RectangleCCRange result = new RectangleCCRange();
 		result.setAccelerationRange(accelerationRange);
 		result.setTurnRange(turnRange);
-		result.setPriority(ccRange.getPriority());
 			
 		return result;
 	}
@@ -74,22 +56,9 @@ public class RectangleCCRange implements CCRange, Cloneable {
 		this.turnRange = turnRange;
 	}
 
-	public Priority getPriority() {
-		return priority;
-	}
-
-	public void setPriority(Priority priority) {
-		this.priority = priority;
-	}
-
 	@Override
 	public RectangleCCRange clone() {
-		RectangleCCRange result;
-		try {
-			result = (RectangleCCRange) super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new RuntimeException("Exception in RectangleCCRange..");
-		}
+		RectangleCCRange result = (RectangleCCRange) super.clone();
 		result.setAccelerationRange(accelerationRange.clone());
 		result.setTurnRange(turnRange.clone());
 		return result;
@@ -112,6 +81,11 @@ public class RectangleCCRange implements CCRange, Cloneable {
 		result.setTurn(turn);
 		
 		return result;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return accelerationRange.isEmpty() || turnRange.isEmpty();
 	}
 
 }
