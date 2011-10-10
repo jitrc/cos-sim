@@ -107,7 +107,7 @@ public class ForthcomingNode extends AbstractBehaviorCase {
 		Hand turnHand = null;
 		if (desiredLane.getIndex()>lane.getIndex())
 			turnHand = Hand.Right;
-		if (desiredLane.getIndex()>lane.getIndex())
+		if (desiredLane.getIndex()<lane.getIndex())
 			turnHand = Hand.Left;
 		
 		// try to change lane in desired hand,

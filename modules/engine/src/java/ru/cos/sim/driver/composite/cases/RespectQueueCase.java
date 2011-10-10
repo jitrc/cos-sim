@@ -69,13 +69,17 @@ public class RespectQueueCase extends AbstractBehaviorCase {
 		Lane desiredLane = driver.getNodesDesiredIncomingLane();
 		if (desiredLane==null) return null;
 		
-		float queueLength = evalueateQueueLength(desiredLane, desiredLane.getLength(), nodeForkPoint.getDistance());
-		float distanceToStop = nodeForkPoint.getActualDistance()-queueLength;
+		float queueLength = evalueateQueueLength(desiredLane, desiredLane.getLength(), nodeForkPoint.getActualDistance());
+
+		RectangleCCRange ccRange = null;
 		
-		float acceleration = idmCalculator.calculate(driver.getVehicle(), new Perception(distanceToStop, new BlockRoadObject()));
-		RectangleCCRange ccRange = new RectangleCCRange();
-		ccRange.getAccelerationRange().setHigher(acceleration);
-		ccRange.setPriority(Priority.RespectQueueCase);
+		if (queueLength>0){
+			float distanceToStop = nodeForkPoint.getActualDistance()-queueLength;
+			float acceleration = idmCalculator.calculate(driver.getVehicle(), new Perception(distanceToStop, new BlockRoadObject()));
+			ccRange = new RectangleCCRange();
+			ccRange.getAccelerationRange().setHigher(acceleration);
+			ccRange.setPriority(Priority.RespectQueueCase);
+		}
 		
 		return ccRange;
 	}
