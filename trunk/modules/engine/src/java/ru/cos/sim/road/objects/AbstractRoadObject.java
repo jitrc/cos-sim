@@ -11,7 +11,7 @@ import ru.cos.sim.utils.Hand;
  * Abstract road object {@link RoadObject}
  * @author zroslaw
  */
-public abstract class AbstractRoadObject extends PointImpl implements RoadObject{
+public abstract class AbstractRoadObject extends PointImpl implements RoadObject, Cloneable{
 	
 	protected float shift = 0;
 	

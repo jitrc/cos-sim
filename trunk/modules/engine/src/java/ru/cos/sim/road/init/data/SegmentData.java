@@ -3,6 +3,8 @@
  */
 package ru.cos.sim.road.init.data;
 
+import java.util.Set;
+
 import ru.cos.sim.road.link.Segment.SegmentType;
 
 /**
@@ -20,6 +22,8 @@ public abstract class SegmentData {
 	protected int nextSegmentId;
 	
 	protected LaneData[] lanes;
+	
+	protected Set<SignData> signs;
 	
 	public abstract SegmentType getSegmentType();
 
@@ -61,6 +65,14 @@ public abstract class SegmentData {
 
 	public void setLanes(LaneData[] lanes) {
 		this.lanes = lanes;
+	}
+
+	public Set<SignData> getSigns() {
+		return signs;
+	}
+
+	public void setSigns(Set<SignData> signs) {
+		this.signs = signs;
 	}
 	
 }

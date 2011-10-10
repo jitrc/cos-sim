@@ -3,8 +3,9 @@
  */
 package ru.cos.sim.road.init.xml;
 
+import java.util.HashSet;
 import java.util.List;
-
+import java.util.Set;
 
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -12,8 +13,12 @@ import org.jdom.Namespace;
 import ru.cos.sim.mdf.MDFReader;
 import ru.cos.sim.road.exceptions.RoadNetworkException;
 import ru.cos.sim.road.init.data.LaneData;
+import ru.cos.sim.road.init.data.NoSpeedLimitSignData;
 import ru.cos.sim.road.init.data.SegmentData;
+import ru.cos.sim.road.init.data.SignData;
+import ru.cos.sim.road.init.data.SpeedLimitSignData;
 import ru.cos.sim.road.init.data.TrapeziumSegmentData;
+import ru.cos.sim.road.init.xml.exceptions.XMLReaderException;
 import ru.cos.sim.road.link.Segment.SegmentType;
 
 /**
@@ -33,6 +38,11 @@ public class SegmentDataReader {
 	public static final String LANES = "Lanes"; 
 	public static final String LANE = "Lane"; 
 	public static final String TRAPEZIUM_SHIFT = "trapeziumShift"; 
+	public static final String ROAD_SIGNS = "RoadSigns"; 
+	public static final String SPEED_LIMIT_SIGN = "SpeedLimitSign";
+	public static final String NO_SPEED_LIMIT_SIGN = "NoSpeedLimitSign";
+	public static final String SPEED_LIMIT = "speedLimit";
+	public static final String POSITION = "position";
 
 	public static SegmentData read(Element segmentElement) {
 		
@@ -70,6 +80,30 @@ public class SegmentDataReader {
 			lanes[laneData.getIndex()]=laneData;
 		}
 		segmentData.setLanes(lanes);
+		
+		// Read signs
+		Set<SignData> signs = new HashSet<SignData>();
+		Element roadSignsElement = segmentElement.getChild(ROAD_SIGNS,NS);
+		if (roadSignsElement!=null){
+			for (Object signObj:roadSignsElement.getChildren()){
+				Element signElement = (Element) signObj;
+				SignData signData = null;
+				if (signElement.getName().equals(SPEED_LIMIT_SIGN)){
+					SpeedLimitSignData speedLimitSignData = new SpeedLimitSignData();
+					Element speedLimitElement = signElement.getChild(SPEED_LIMIT, NS);
+					speedLimitSignData.setSpeedLimit(Float.parseFloat(speedLimitElement.getText()));
+					signData = speedLimitSignData;
+				}else if (signElement.getName().equals(NO_SPEED_LIMIT_SIGN)){
+					signData = new NoSpeedLimitSignData();
+				}else
+					throw new XMLReaderException("Unknown sign name "+signElement.getName());
+				// set position
+				Element positionElement = signElement.getChild(POSITION, NS);
+				signData.setPosition(Float.parseFloat(positionElement.getText()));
+				signs.add(signData);
+			}
+		}
+		segmentData.setSigns(signs);
 		
 		return segmentData;
 	}
