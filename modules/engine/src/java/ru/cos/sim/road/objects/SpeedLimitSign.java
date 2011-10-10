@@ -7,7 +7,7 @@ package ru.cos.sim.road.objects;
  * @author zroslaw
  *
  */
-public class SpeedLimitationSign extends Sign {
+public class SpeedLimitSign extends Sign {
 
 	private float speedLimit;
 	

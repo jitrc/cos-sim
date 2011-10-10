@@ -12,7 +12,6 @@ import ru.cos.sim.visualizer.trace.item.base.BaseCarKeeper;
 import ru.cos.sim.visualizer.trace.item.base.TrafficLight;
 import ru.cos.sim.visualizer.trace.item.base.TrafficLight.Color;
 import ru.cos.sim.visualizer.traffic.core.SimulationSystemManager;
-import ru.cos.sim.visualizer.traffic.core.SystemProperties;
 import ru.cos.sim.visualizer.traffic.core.SystemProperties.ShowState;
 import ru.cos.sim.visualizer.traffic.core.SystemProperties.TrafficLightSignalsShow;
 

@@ -5,10 +5,12 @@ package ru.cos.sim.road.init.factories;
 
 import ru.cos.sim.road.init.data.LaneData;
 import ru.cos.sim.road.init.data.SegmentData;
+import ru.cos.sim.road.init.data.SignData;
 import ru.cos.sim.road.init.data.TrapeziumSegmentData;
 import ru.cos.sim.road.init.factories.exceptions.RoadNetworkFactoryException;
 import ru.cos.sim.road.link.Lane;
 import ru.cos.sim.road.link.Segment;
+import ru.cos.sim.road.objects.Sign;
 
 /**
  * 
@@ -41,6 +43,16 @@ public class SegmentFactory {
 			lanes[i]=lane;
 		}
 		segment.setLanes(lanes);
+		
+		// create and put set of signs on this segment 
+		for (SignData signData:segmentData.getSigns()){
+			Sign sign = SignFactory.createSign(signData);
+			// put sign instances on each lane on specified position
+			for (Lane lane:lanes){
+				lane.putPoint(sign, signData.getPosition());
+				sign = sign.clone();
+			}
+		}
 		
 		return segment;
 	}

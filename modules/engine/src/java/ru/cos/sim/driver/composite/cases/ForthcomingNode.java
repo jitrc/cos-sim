@@ -111,8 +111,8 @@ public class ForthcomingNode extends AbstractBehaviorCase {
 			turnHand = Hand.Left;
 		
 		// try to change lane in desired hand,
-		// remember to check safety
-		if (driver.isTurnSafe(turnHand))
+//		// remember to check safety
+//		if (driver.isTurnSafe(turnHand))
 			ccRange.getTurnRange().setOneHand(turnHand);
 		
 		// anyway we need to restrict turns in opposite direction
