@@ -15,6 +15,7 @@ import ru.cos.sim.driver.composite.cases.RespectQueueCase;
 import ru.cos.sim.driver.composite.cases.RouterCase;
 import ru.cos.sim.driver.composite.cases.SafetyCase;
 import ru.cos.sim.driver.composite.cases.TrafficLightCase;
+import ru.cos.sim.driver.composite.framework.CCRange;
 import ru.cos.sim.driver.composite.framework.ControlCommand;
 import ru.cos.sim.driver.composite.framework.RectangleCCRange;
 import ru.cos.sim.driver.route.RouteProvider;
@@ -81,12 +82,12 @@ public class CompositeDriver extends AbstractDriver {
 		routerCase.behave(dt);
 		RectangleCCRange ccRange;
 		ccRange = (RectangleCCRange) safetyCase.behave(dt);
-		ccRange = (RectangleCCRange) ccRange.intersect(trafficLightCase.behave(dt));
-//		ccRange = (RectangleCCRange) ccRange.intersect(respectQueueCase.behave(dt));
-		ccRange = (RectangleCCRange) ccRange.intersect(forthcomingNodeCase.behave(dt));
-		ccRange = (RectangleCCRange) ccRange.intersect(laneChangeCase.behave(dt));
-		ccRange = (RectangleCCRange) ccRange.intersect(cfCase.behave(dt));
-		ccRange = (RectangleCCRange) ccRange.intersect(laneAlignCase.behave(dt));
+		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, trafficLightCase.behave(dt));
+//		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, respectQueueCase.behave(dt));
+		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, forthcomingNodeCase.behave(dt));
+		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, laneChangeCase.behave(dt));
+		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, cfCase.behave(dt));
+		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, laneAlignCase.behave(dt));
 		
 		// calculate final control command value
 		ControlCommand cc = ccRange.controlCommand();
