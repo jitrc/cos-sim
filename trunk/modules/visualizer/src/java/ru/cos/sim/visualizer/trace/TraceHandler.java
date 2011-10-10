@@ -191,13 +191,13 @@ public class TraceHandler {
 		TransitionRule r = ((CrossRoad)getNode(location.getNodeId())).getRule(rule.id());
 		rules.add(r);
 		// Set relations to the distanation and source lanes
-		Segment dSegment = getLink(rule.getDestLane().getLinkId()).getLast();
+		Segment dSegment = getLink(rule.getDestLane().getLinkId()).getFirst();
 		rule.getDestLane().setSegmentId(dSegment.id());
 		
 		Lane dlane = dSegment.getLane(rule.getDestLane().getLaneId());
 		r.setDestinationLane(dlane);
 		
-		Segment sSegment = getLink(rule.getSrcLane().getLinkId()).getFirst();
+		Segment sSegment = getLink(rule.getSrcLane().getLinkId()).getLast();
 		rule.getSrcLane().setSegmentId(sSegment.id());
 		
 		Lane slane = sSegment.getLane(rule.getSrcLane().getLaneId());
