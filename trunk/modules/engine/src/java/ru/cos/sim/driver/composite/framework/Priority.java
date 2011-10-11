@@ -12,9 +12,10 @@ public enum Priority {
 	Lowest, 
 	LaneAlign,
 	CarFollowing, 
-	LaneChanging, 
+	LaneChanging,
 	ForthcomingNode,
 	RespectQueueCase,
+	SpeedLimit,
 	TrafficLightCase,
 	SafetyCase;
 

@@ -98,12 +98,12 @@ public class RespectQueueCase extends AbstractBehaviorCase {
 				if (lane.isLeftmost()){
 					float queueLengthOnRight = 
 						evalueateQueueLength(lane.getRightLane(), lane.getRightPosition(0.01f),distanceToObserve-lane.getLength());
-					return lane.getLength()+queueLengthOnRight;
+					return queueLengthOnRight>0?lane.getLength()+queueLengthOnRight:0;
 				}
 				if (lane.isRightmost()){
 					float queueLengthOnLeft = 
 						evalueateQueueLength(lane.getLeftLane(), lane.getLeftPosition(0.01f),distanceToObserve-lane.getLength());
-					return lane.getLength()+queueLengthOnLeft;
+					return queueLengthOnLeft>0?lane.getLength()+queueLengthOnLeft:0;
 				}
 				break;
 			}

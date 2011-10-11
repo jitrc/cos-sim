@@ -20,6 +20,8 @@ public class TrajectoryPercepts {
 	private Perception frontFork;
 	
 	private List<Perception> frontTrafficLights;
+	
+	private List<Perception> roadSigns;
 
 	public Perception getFrontObstacle() {
 		return frontObstacle;
@@ -59,6 +61,14 @@ public class TrajectoryPercepts {
 
 	public List<Perception> getFrontTrafficLights() {
 		return frontTrafficLights;
+	}
+
+	public List<Perception> getRoadSigns() {
+		return roadSigns;
+	}
+
+	public void setRoadSigns(List<Perception> roadSigns) {
+		this.roadSigns = roadSigns;
 	}
 
 }

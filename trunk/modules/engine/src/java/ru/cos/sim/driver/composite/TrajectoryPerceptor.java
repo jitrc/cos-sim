@@ -42,6 +42,7 @@ public class TrajectoryPerceptor {
 		Perception frontJoin = null;
 		Perception frontFork = null;
 		List<Perception> frontTrafficLights = new Vector<Perception>();
+		List<Perception> roadSigns = new Vector<Perception>();
 
 		// parse front observation
 		for (Observation observation:frontObservations){
@@ -54,13 +55,19 @@ public class TrajectoryPerceptor {
 					frontObstacle = new Perception(observation, driver.getVehicle());
 				break;
 			case NodeFork:
-				frontFork = new Perception(observation, driver.getVehicle());
+				if (frontFork==null)
+					frontFork = new Perception(observation, driver.getVehicle());
 				break;
 			case NodeJoin:
-				frontJoin = new Perception(observation, driver.getVehicle());
+				if (frontJoin==null)
+					frontJoin = new Perception(observation, driver.getVehicle());
 				break;
 			case TrafficLight:
 				frontTrafficLights.add(new Perception(observation, driver.getVehicle()));
+				break;
+			case RoadSign:
+				roadSigns.add(new Perception(observation, driver.getVehicle()));
+				break;
 			}
 		}
 
@@ -78,6 +85,7 @@ public class TrajectoryPerceptor {
 		percepts.setFrontFork(frontFork);
 		percepts.setFrontJoin(frontJoin);
 		percepts.setFrontTrafficLights(frontTrafficLights);
+		percepts.setRoadSigns(roadSigns);
 		
 		return percepts;
 	}
