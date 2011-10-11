@@ -116,12 +116,12 @@ public class ForthcomingNode extends AbstractBehaviorCase {
 			ccRange.getTurnRange().setOneHand(turnHand);
 		
 		// anyway we need to restrict turns in opposite direction
-		if (turnHand==Hand.Left && vehicle.getShift()>=0){
-			ccRange.getTurnRange().remove(Hand.Right);
-		}
-		if (turnHand==Hand.Right && vehicle.getShift()<=0){
-			ccRange.getTurnRange().remove(Hand.Left);
-		}
+//		if (turnHand==Hand.Left && vehicle.getShift()>=0){
+//			ccRange.getTurnRange().remove(Hand.Right);
+//		}
+//		if (turnHand==Hand.Right && vehicle.getShift()<=0){
+//			ccRange.getTurnRange().remove(Hand.Left);
+//		}
 		
 		// restrict acceleration
 		// set smaller max speed when approaching closer to the intersection

@@ -45,14 +45,15 @@ public class SegmentFactory {
 		segment.setLanes(lanes);
 		
 		// create and put set of signs on this segment 
-		for (SignData signData:segmentData.getSigns()){
-			Sign sign = SignFactory.createSign(signData);
-			// put sign instances on each lane on specified position
-			for (Lane lane:lanes){
-				lane.putPoint(sign, signData.getPosition());
-				sign = sign.clone();
+		if (segmentData.getSigns()!=null)
+			for (SignData signData:segmentData.getSigns()){
+				Sign sign = SignFactory.createSign(signData);
+				// put sign instances on each lane on specified position
+				for (Lane lane:lanes){
+					lane.putPoint(sign, signData.getPosition());
+					sign = sign.clone();
+				}
 			}
-		}
 		
 		return segment;
 	}

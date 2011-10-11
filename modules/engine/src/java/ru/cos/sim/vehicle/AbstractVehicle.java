@@ -91,11 +91,16 @@ public abstract class AbstractVehicle extends AbstractRectangleRoadObject implem
 		roadTrajectory = (RoadTrajectory) lengthy;
 		
 		// react on lane change desire
+		float newShift = 0;
 		if (laneChangeDesire==Left){
-			shift-=laneChangeSpeed*dt;
+			newShift = shift-laneChangeSpeed*dt;
 		}else if (laneChangeDesire==Right){
-			shift+=laneChangeSpeed*dt;
+			newShift = shift+laneChangeSpeed*dt;
 		}
+		if (shift*newShift<0) 
+			shift = 0; // if shift changes its sign
+		else
+			shift = newShift;
 		
 		// 
 		if (roadTrajectory.isLane()){

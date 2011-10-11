@@ -31,8 +31,6 @@ public class RegularVehicle extends AbstractVehicle {
 	@Override
 	protected Pair<Float, Hand> drive(float dt) {
 		Pair<Float, Hand> result = driver.drive(dt);
-		float torque = result.getFirst();
-		result.setFirst(torque);
 		return result;
 	}
 
