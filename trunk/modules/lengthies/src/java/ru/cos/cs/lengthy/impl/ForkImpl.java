@@ -112,8 +112,10 @@ public class ForkImpl extends LengthyImpl implements Fork {
 	@Override
 	public void move(Point point, float distance, Router router) {
 		next = router.chooseNextLengthy(this);
+		if (next==null)
+			throw new IllegalLengthiesNavigationException("Router has not choose any of forked lengthies to move on");
 		if (!forkedLengthies.contains(next))
-			throw new IllegalLengthiesNavigationException("Chosed by router lengthy does not forked from this fork");
+			throw new IllegalLengthiesNavigationException("Chosen by router lengthy does not forked from this fork");
 		super.move(point, distance, router);
 		next = null;
 	}

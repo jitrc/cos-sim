@@ -95,12 +95,12 @@ public class RespectQueueCase extends AbstractBehaviorCase {
 				queueLength=-observation.getDistance()+((Vehicle)roadObject).getHalfLength();
 				break;
 			case StartOfLane:
-				if (lane.isLeftmost()){
+				if (lane.isLeftmost() && !lane.isRightmost()){
 					float queueLengthOnRight = 
 						evalueateQueueLength(lane.getRightLane(), lane.getRightPosition(0.01f),distanceToObserve-lane.getLength());
 					return queueLengthOnRight>0?lane.getLength()+queueLengthOnRight:0;
 				}
-				if (lane.isRightmost()){
+				if (lane.isRightmost() && !lane.isLeftmost()){
 					float queueLengthOnLeft = 
 						evalueateQueueLength(lane.getLeftLane(), lane.getLeftPosition(0.01f),distanceToObserve-lane.getLength());
 					return queueLengthOnLeft>0?lane.getLength()+queueLengthOnLeft:0;
