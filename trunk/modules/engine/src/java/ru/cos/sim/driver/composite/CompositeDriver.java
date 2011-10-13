@@ -89,9 +89,9 @@ public class CompositeDriver extends AbstractDriver {
 		ccRange = (RectangleCCRange) safetyCase.behave(dt);
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, trafficLightCase.behave(dt));
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, speedLimitCase.behave(dt));
-		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, respectQueueCase.behave(dt));
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, forthcomingNodeCase.behave(dt));
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, mandatoryLaneChanging.behave(dt));
+		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, respectQueueCase.behave(dt));
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, laneChangeCase.behave(dt));
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, cfCase.behave(dt));
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, laneAlignCase.behave(dt));
