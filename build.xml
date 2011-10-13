@@ -47,8 +47,17 @@
 				<include name="*.jar"/>
 			</fileset>
 		</copy>
+		
+		<!-- Copy all required libs from "libs" folder -->
 		<copy todir="distr/libs">
 			<fileset dir="${basedir}/libs">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		
+		<!-- Copy demo maps to "distr/maps" folder -->
+		<copy todir="distr/maps">
+			<fileset dir="resources/maps">
 				<include name="**/*"/>
 			</fileset>
 		</copy>
@@ -293,7 +302,7 @@
 		</pathconvert>
 
 		<echo file="distr/launch.bat">start javaw -Djava.library.path=./libs/native/windows -cp "${windows-classpath}" ru.cos.sim.visualizer.main.Main</echo>
-		<echo file="distr/launch.sh">java -Djava.library.path=./libs/native/linux -cp "${unix-classpath}" ru.cos.sim.visualizer.main.Main</echo>
+		<!--<echo file="distr/launch.sh">java -Djava.library.path=./libs/native/linux -cp "${unix-classpath}" ru.cos.sim.visualizer.main.Main</echo> -->
 
 		<!--
 		<echo file="assembly/mapGenerator.bat">java -cp "${windows-classpath};${windows-jars};." ru.cos.sim.visualizer.traffic.verification.maps.MapGenerator %1 %2</echo>
