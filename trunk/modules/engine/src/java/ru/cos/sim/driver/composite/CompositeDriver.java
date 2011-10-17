@@ -12,6 +12,7 @@ import ru.cos.sim.driver.composite.cases.ForthcomingNode;
 import ru.cos.sim.driver.composite.cases.LaneAlignCase;
 import ru.cos.sim.driver.composite.cases.LaneChangeCase;
 import ru.cos.sim.driver.composite.cases.MandatoryLaneChanging;
+import ru.cos.sim.driver.composite.cases.RespectNodeCase;
 import ru.cos.sim.driver.composite.cases.RespectQueueCase;
 import ru.cos.sim.driver.composite.cases.RouterCase;
 import ru.cos.sim.driver.composite.cases.SafetyCase;
@@ -50,6 +51,7 @@ public class CompositeDriver extends AbstractDriver {
 	protected RespectQueueCase respectQueueCase = new RespectQueueCase(this);
 	protected SpeedLimitCase speedLimitCase = new SpeedLimitCase(this);
 	protected MandatoryLaneChanging mandatoryLaneChanging = new MandatoryLaneChanging(this);
+	protected RespectNodeCase respectNodeCase = new RespectNodeCase(this);
 	
 	public CompositeDriver() {
 		this.perceptor = new Perceptor(this);
@@ -68,6 +70,7 @@ public class CompositeDriver extends AbstractDriver {
 		forthcomingNodeCase.init(parameters);
 		respectQueueCase.init(parameters);
 		speedLimitCase.init(parameters);
+		respectNodeCase.init(parameters);
 	}
 	
 	@Override
@@ -91,6 +94,7 @@ public class CompositeDriver extends AbstractDriver {
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, speedLimitCase.behave(dt));
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, forthcomingNodeCase.behave(dt));
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, mandatoryLaneChanging.behave(dt));
+		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, respectNodeCase.behave(dt));
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, respectQueueCase.behave(dt));
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, laneChangeCase.behave(dt));
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, cfCase.behave(dt));
