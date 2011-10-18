@@ -29,14 +29,14 @@ import ru.cos.sim.vehicle.RegularVehicle;
  * @author zroslaw
  *
  */
-public class MandatoryLaneChanging extends AbstractBehaviorCase {
+public class MandatoryLaneChangingCase extends AbstractBehaviorCase {
 
 	private Lane desiredLane = null;
 	
 	/**
 	 * @param driver
 	 */
-	public MandatoryLaneChanging(CompositeDriver driver) {
+	public MandatoryLaneChangingCase(CompositeDriver driver) {
 		super(driver);
 	}
 

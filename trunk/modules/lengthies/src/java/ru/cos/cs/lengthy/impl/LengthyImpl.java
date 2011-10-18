@@ -1,5 +1,6 @@
 package ru.cos.cs.lengthy.impl;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -247,6 +248,21 @@ public abstract class LengthyImpl implements Lengthy {
 			impl.continuouses.remove(continuous);
 		}
 		continuous.getOccupiedLengthies().clear();
+	}
+
+	public List<Point> getRegularPoints(){
+		List<Point> result = new ArrayList<Point>(points.size());
+		for (Point point:points){
+			if (point.getPointType()==PointType.MultiPoint){
+				MultiPoint multiPoint = (MultiPoint)point;
+				for (Point regularPoint:multiPoint.getPoints()){
+					result.add(regularPoint);
+				}
+			}else{
+				result.add(point);
+			}
+		}
+		return result;
 	}
 
 	public List<Point> getPoints(){

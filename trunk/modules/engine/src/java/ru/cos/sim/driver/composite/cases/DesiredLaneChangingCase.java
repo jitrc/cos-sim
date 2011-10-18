@@ -24,11 +24,11 @@ import ru.cos.sim.vehicle.RegularVehicle;
  * MOBIL lane change model is employed in this implementation.
  * @author zroslaw
  */
-public class LaneChangeCase extends AbstractBehaviorCase {
+public class DesiredLaneChangingCase extends AbstractBehaviorCase {
 	
 	protected MOBILCalculator mobilCalculator;
 
-	public LaneChangeCase(CompositeDriver driver) {
+	public DesiredLaneChangingCase(CompositeDriver driver) {
 		super(driver);
 		mobilCalculator = new MOBILCalculator();
 	}

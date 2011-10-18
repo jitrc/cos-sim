@@ -10,14 +10,15 @@ import ru.cos.sim.driver.AbstractDriver;
 import ru.cos.sim.driver.composite.cases.CarFollowingCase;
 import ru.cos.sim.driver.composite.cases.ForthcomingNode;
 import ru.cos.sim.driver.composite.cases.LaneAlignCase;
-import ru.cos.sim.driver.composite.cases.LaneChangeCase;
-import ru.cos.sim.driver.composite.cases.MandatoryLaneChanging;
+import ru.cos.sim.driver.composite.cases.DesiredLaneChangingCase;
+import ru.cos.sim.driver.composite.cases.MandatoryLaneChangingCase;
 import ru.cos.sim.driver.composite.cases.RespectNodeCase;
 import ru.cos.sim.driver.composite.cases.RespectQueueCase;
 import ru.cos.sim.driver.composite.cases.RouterCase;
 import ru.cos.sim.driver.composite.cases.SafetyCase;
 import ru.cos.sim.driver.composite.cases.SpeedLimitCase;
 import ru.cos.sim.driver.composite.cases.TrafficLightCase;
+import ru.cos.sim.driver.composite.cases.WayJoinCase;
 import ru.cos.sim.driver.composite.framework.CCRange;
 import ru.cos.sim.driver.composite.framework.ControlCommand;
 import ru.cos.sim.driver.composite.framework.RectangleCCRange;
@@ -44,14 +45,15 @@ public class CompositeDriver extends AbstractDriver {
 	protected RouterCase routerCase = new RouterCase(this);
 	protected CarFollowingCase cfCase = new CarFollowingCase(this);
 	protected LaneAlignCase laneAlignCase = new LaneAlignCase(this);
-	protected LaneChangeCase laneChangeCase = new LaneChangeCase(this);
+	protected DesiredLaneChangingCase desiredLaneChangingCase = new DesiredLaneChangingCase(this);
 	protected SafetyCase safetyCase = new SafetyCase(this);
 	protected TrafficLightCase trafficLightCase = new TrafficLightCase(this);
 	protected ForthcomingNode forthcomingNodeCase = new ForthcomingNode(this);
 	protected RespectQueueCase respectQueueCase = new RespectQueueCase(this);
 	protected SpeedLimitCase speedLimitCase = new SpeedLimitCase(this);
-	protected MandatoryLaneChanging mandatoryLaneChanging = new MandatoryLaneChanging(this);
+	protected MandatoryLaneChangingCase mandatoryLaneChangingCase = new MandatoryLaneChangingCase(this);
 	protected RespectNodeCase respectNodeCase = new RespectNodeCase(this);
+	protected WayJoinCase wayJoinCase = new WayJoinCase(this);
 	
 	public CompositeDriver() {
 		this.perceptor = new Perceptor(this);
@@ -71,6 +73,7 @@ public class CompositeDriver extends AbstractDriver {
 		respectQueueCase.init(parameters);
 		speedLimitCase.init(parameters);
 		respectNodeCase.init(parameters);
+		wayJoinCase.init(parameters);
 	}
 	
 	@Override
@@ -92,11 +95,12 @@ public class CompositeDriver extends AbstractDriver {
 		ccRange = (RectangleCCRange) safetyCase.behave(dt);
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, trafficLightCase.behave(dt));
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, speedLimitCase.behave(dt));
+		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, wayJoinCase.behave(dt));
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, forthcomingNodeCase.behave(dt));
-		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, mandatoryLaneChanging.behave(dt));
+		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, mandatoryLaneChangingCase.behave(dt));
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, respectNodeCase.behave(dt));
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, respectQueueCase.behave(dt));
-		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, laneChangeCase.behave(dt));
+		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, desiredLaneChangingCase.behave(dt));
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, cfCase.behave(dt));
 		ccRange = (RectangleCCRange) CCRange.calculateResultantRange(ccRange, laneAlignCase.behave(dt));
 		
@@ -156,7 +160,7 @@ public class CompositeDriver extends AbstractDriver {
 	 * @return desired incoming lane
 	 */
 	public Lane getNodesDesiredIncomingLane() {
-		return mandatoryLaneChanging.getDesiredLane();
+		return mandatoryLaneChangingCase.getDesiredLane();
 	}
 
 }
