@@ -28,20 +28,19 @@ public class BezierLane extends BezierCurve {
 	}
 	
 	public void generateLane(float begin , float end) {
-		generateBezierCurve(begin, end);
-		generateBorders();
+		Vector2f directionVector = generateBezierCurve(begin, end);
+		if (directionVector != null) generateBorders(directionVector); 
+			else	generateBorders();
 	}
 	
-	private void generateBorders()
-	{
-		Vector2f base = new Vector2f(this.base_points[1]);
-		Vector2f tangent = base;
-		tangent.subtractLocal(this.base_points[0]);
-		tangent.normalizeLocal();
-		tangent.multLocal(width/2.0f);
-		tangent.rotate90();
+	private void generateBorders(Vector2f directionVector) {
+		directionVector.normalizeLocal();
+		directionVector.multLocal(width/2.0f);
+		directionVector.rotate90();
 		top = new Vector2f[result.length];
 		bottom = new Vector2f[result.length];
+		
+		Vector2f tangent = directionVector;
 		for (int i = 0 ; i < result.length ; i++)
 		{
 			if (i !=0) {
@@ -56,6 +55,15 @@ public class BezierLane extends BezierCurve {
 			bottom[i] = result[i].add(tangent.negate());
 		}
 	}
+	
+	
+	private void generateBorders()
+	{
+		Vector2f base = new Vector2f(this.base_points[1]);
+		Vector2f tangent = base;
+		tangent.subtractLocal(this.base_points[0]);
+		generateBorders(tangent);
+	}	
 
 	public Vector2f[] getTop() {
 		return top;

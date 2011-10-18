@@ -109,8 +109,10 @@ public class BezierCurve {
 		return splitIndex;
 	}
 	
-	protected void generateBezierCurve(float begin ,  float end )
+	protected Vector2f generateBezierCurve(float begin ,  float end )
 	{
+		Vector2f directionVector = null;
+		
 		result = new Vector2f[steps+3];
 		lengthes = new float[steps+3];
 		length = 0;
@@ -138,6 +140,8 @@ public class BezierCurve {
 					Vector2f p = point.subtract(result[j-1]).normalizeLocal().
 							multLocal(begin - length).addLocal(result[j-1]);
 					chooseResult.add( p );
+					directionVector = point.subtract(result[j-1]);
+					if (Math.abs(directionVector.length()) <= 0.0001f) directionVector = null;
 					chooseLengthies.add(length + p.distance(result[j-1]));
 
 					inSector = true;
@@ -184,6 +188,7 @@ public class BezierCurve {
 			lengthes[i] = chooseLengthies.get(i);
 		}
 		
+		return directionVector;
 	}
 	
 	/**
