@@ -122,11 +122,17 @@ public interface Lengthy{
 	 * @param c1
 	 */
 	public void removeContinuous(Continuous continuous);
-	
+
 	/**
 	 * Retrieve ordered list of points placed on this lengthy.
 	 * @return
 	 */
 	public List<Point> getPoints();
+	
+	/**
+	 * Retrieve ordered list of regular points placed on this lengthy.
+	 * @return
+	 */
+	public List<Point> getRegularPoints();
 
 }

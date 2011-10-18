@@ -3,6 +3,9 @@
  */
 package ru.cos.sim.driver.composite;
 
+import java.util.List;
+
+import ru.cos.cs.lengthy.Observation;
 import ru.cos.sim.road.exceptions.RoadNetworkException;
 import ru.cos.sim.road.objects.AbstractRoadObject;
 import ru.cos.sim.road.objects.RoadObject;
@@ -27,7 +30,7 @@ public class Obstacle extends AbstractRoadObject{
 	public Obstacle(RoadObject roadObject){
 		ObstacleType type = getObstacleType(roadObject);
 		if (type==null)
-			throw new RoadNetworkException("Attempt to create obstacle from an road object that is not an obstacle.");
+			throw new RoadNetworkException("Attempt to create obstacle from a road object that is not an obstacle.");
 		this.obstacle = roadObject;
 		this.obstacleType = type;
 	}
@@ -65,6 +68,15 @@ public class Obstacle extends AbstractRoadObject{
 		default:
 			return null;
 		}
+	}
+
+	public static Observation findFirstObstacle(List<Observation> observations) {
+		for (Observation observation:observations){
+			RoadObject roadObject = (RoadObject)observation.getPoint();
+			if (getObstacleType(roadObject)!=null)
+				return observation;
+		}
+		return null;
 	}
 	
 }

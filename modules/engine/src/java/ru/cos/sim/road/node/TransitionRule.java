@@ -1,5 +1,7 @@
 package ru.cos.sim.road.node;
 
+import ru.cos.cs.lengthy.Fork;
+import ru.cos.cs.lengthy.Join;
 import ru.cos.sim.road.AbstractRoadTrajectory;
 import ru.cos.sim.road.link.Lane;
 import ru.cos.sim.road.link.Link;
@@ -68,6 +70,14 @@ public class TransitionRule extends AbstractRoadTrajectory{
 	@Override
 	public boolean isTransitionRules() {
 		return true;
+	}
+
+	public Lane getOutgoingLane() {
+		return (Lane) ((Join)next).getNext();
+	}
+
+	public Lane getIncomingLane() {
+		return (Lane) ((Fork)prev).getPrev();
 	}
 
 }
