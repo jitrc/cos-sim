@@ -21,6 +21,9 @@ import ru.cos.sim.driver.composite.framework.Priority;
 import ru.cos.sim.driver.composite.framework.RectangleCCRange;
 import ru.cos.sim.road.node.NodeJoin;
 import ru.cos.sim.road.node.NodeJoinPoint;
+import ru.cos.sim.road.objects.RoadObject;
+import ru.cos.sim.road.objects.RoadObject.RoadObjectType;
+import ru.cos.sim.vehicle.Vehicle;
 
 /**
  * 
@@ -44,42 +47,51 @@ public class WayJoinCase extends AbstractBehaviorCase {
 		Percepts percepts = driver.getPercepts();
 		TrajectoryPercepts currentPercepts = percepts.getCurrentPercepts();
 		Perception frontJoinPerception = currentPercepts.getFrontJoin();
+		Perception frontObstaclePerception = currentPercepts.getFrontObstacle();
 		if (frontJoinPerception==null) return null;
+		if (frontObstaclePerception!=null &&
+			frontObstaclePerception.getActualDistance()<frontJoinPerception.getActualDistance())
+			return null;
 		
 		NodeJoin nodeJoin = ((NodeJoinPoint)frontJoinPerception.getRoadObject()).getNodeJoin();
-		float joinDistance = frontJoinPerception.getDistance();
+		float joinDistance = frontJoinPerception.getActualDistance();
 		Set<RegularLengthy> joinedWays = nodeJoin.getJoinedLengthies();
 		
-		float minDistance = joinDistance;
-		// find nearest movable obstacle
-		Perception nearestObstacle = null;
+		float nearestDistance = 0;
+		// find nearest vehicle on joined lengthies
+		Vehicle nearestVehicle = null;
 		for (RegularLengthy joinedLengthy:joinedWays){
 			if (joinedLengthy==driver.getVehicle().getLengthy()) continue;
 			List<Observation> backwardObservations = 
 				joinedLengthy.observeBackward(
 						joinedLengthy.getLength(),
-						joinDistance+5, 
+						joinDistance, 
 						null);
-			Observation behindObstacleObservation = Obstacle.findFirstObstacle(backwardObservations);
-			if (behindObstacleObservation==null) continue;
+			//find first vehicle
+			Observation vehicleObservation = null;
+			for (Observation observation:backwardObservations){
+				RoadObject roadObject = (RoadObject) observation.getPoint();
+				if (roadObject.getRoadObjectType()==RoadObjectType.Vehicle){
+					vehicleObservation = observation;
+				}					
+			}
 			
-			Perception behindObstacle = new Perception(behindObstacleObservation,driver.getVehicle());
-			float obstacleDistance = -behindObstacle.getDistance();
-			if (obstacleDistance>=minDistance) continue;
-
-			if(nearestObstacle==null){
-				nearestObstacle = behindObstacle;
-				minDistance = obstacleDistance;
+			if (vehicleObservation==null) continue;
+			Vehicle vehicle = (Vehicle) vehicleObservation.getPoint();
+			float distanceToJoin = -vehicleObservation.getDistance();
+			if (distanceToJoin>nearestDistance && distanceToJoin<joinDistance){
+				nearestDistance = distanceToJoin;
+				nearestVehicle = vehicle;
 			}
 		}
 		
-		if (nearestObstacle==null) return null;
+		if (nearestVehicle==null) return null;
 		
-		// calculate acceleration
+		// calculate acceleration using "phantom" vehicle
 		RectangleCCRange ccRange = new RectangleCCRange();
 		idmCalculator.setSpeed(driver.getVehicle().getSpeed());
-		idmCalculator.setFrontVehicleSpeed(nearestObstacle.getRoadObject().getSpeed());
-		idmCalculator.setDistance(joinDistance);
+		idmCalculator.setFrontVehicleSpeed(nearestVehicle.getSpeed());
+		idmCalculator.setDistance(2*joinDistance-nearestDistance-nearestVehicle.getHalfLength()-driver.getVehicle().getHalfLength());
 		float acceleration = idmCalculator.calculate();
 		ccRange.getAccelerationRange().setHigher(acceleration);
 		ccRange.setPriority(Priority.WayJoinCase);
