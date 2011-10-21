@@ -15,6 +15,8 @@ import ru.cos.cs.agents.framework.impl.IncrementalUIDProvider;
  * @author zroslaw
  */
 public class SimulationEngine {
+	
+	protected float timeStep = 0.1f;
 
 	/**
 	 * Map of agents. Map is implemented as TreeMap for fast agent search.
@@ -64,6 +66,17 @@ public class SimulationEngine {
 		finishStep(dt);
 		// increase model time
 		time+=dt;
+	}
+	
+	/**
+	 * Simulate virtual time period with duration of "time".
+	 * @param time duration of time period to simulate
+	 */
+	public void simulate(float time){
+		while (time>0){
+			time-=timeStep;
+			step(timeStep);
+		}
 	}
 
 	/**
