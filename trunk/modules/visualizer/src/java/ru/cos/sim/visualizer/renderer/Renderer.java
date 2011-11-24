@@ -52,6 +52,7 @@ public class Renderer implements IRenderable{
 	protected ArrayList<Segment> segmentsInCamera;
 	protected CameraListener listener;
 	protected boolean firstAfterInit = true;
+	protected FontManager fontManager;
 	
 	private Renderer() {
 		super();
@@ -78,6 +79,7 @@ public class Renderer implements IRenderable{
 		this.firstAfterInit = true;
 	}
 	
+	
 	public static Renderer createRenderer()
 	{
 		if (renderer != null) {
@@ -90,12 +92,21 @@ public class Renderer implements IRenderable{
 		
 		return renderer;
 	}
+	
+	private void initFonts() {
+		if (fontManager == null) fontManager = new FontManager();
+	}
 
 	@Override
 	public void render(RenderType mode) {
+
 		long time = System.currentTimeMillis();
 		glClear(GL_COLOR_BUFFER_BIT);
 		GL11.glLineWidth(camera.getScale()*lineWidth);
+		
+		//initFonts();
+		
+		
 		if (segments == null) return;
 		if (frustum != null ) frustum.extractFrustum();
 		TraceHandler handler = SimulationSystemManager.getInstance().getTraceHandler();
@@ -111,6 +122,8 @@ public class Renderer implements IRenderable{
 			if (cs instanceof CrossRoad)cs.render(mode);
 		}
 		
+		//fontManager.drawString("Ololo", 1, 1, ru.cos.sim.visualizer.color.Color.red);
+		
 		for (TransitionRule tr : rules)
 		{
 			tr.drawRule(mode);
@@ -120,34 +133,13 @@ public class Renderer implements IRenderable{
 		{
 			tr.draw(mode);
 		}
-		
-//		for (TransitionRule tr : rules)
-//		{
-//			if (tr.getMainLight() != null && 
-//					tr.getMainLight().getLightColor() == Color.Green)  tr.drawMainLight(mode);
-//			if (tr.getWaitLight() != null && 
-//					tr.getWaitLight().getLightColor() == Color.Green)  tr.drawWaitLight(mode);
-//			tr.drawWaitPosition(mode);
-//		}
-		
-//		for (Segment s : segments)
-//			{
-//				s.checkFrustum();
-//				s.render(mode);
-//			}
+
 		for (Segment s : segmentsInCamera)
 		{
 			//s.checkFrustum();
 			s.render(mode);
 		}
-		
-//		if (segmentsInCamera.size() == 0) {
-//			if ((segments != null) && (segments.size() >= 5))
-//				for (int i = 0; i < 5; i++ ){
-//					segments.get(i).render(mode);
-//				}
-//				
-//		}
+
 		
 		
 		for (INode cs : css){
@@ -169,16 +161,7 @@ public class Renderer implements IRenderable{
         }
 		
         if (time - this.startTime > MAX_UPDATE_TIME ) this.canvas.repaint();
-		/*GL11.glBegin(GL11.GL_TRIANGLES);
-		GL11.glColor3f(1, 0, 0);resources/roadNetwork/basicDestNode.png
-		GL11.glVertex3f(0, 0, 0);
-		GL11.glVertex3f(0, 1, 0);
-		GL11.glVertex3f(1, 1,0);
-		
-		GL11.glVertex3f(1, 1, 0);
-		GL11.glVertex3f(1, 0, 0);
-		GL11.glVertex3f(0, 0,0);
-		GL11.glEnd();*/
+
 	}
 
 	public Camera getCamera() {
@@ -252,6 +235,10 @@ public class Renderer implements IRenderable{
 			frustum.extractFrustum();
 			this.listener.cameraMoved();
 		}
+	}
+	
+	public FontManager getFontManager(){
+		return fontManager;
 	}
 	
 }

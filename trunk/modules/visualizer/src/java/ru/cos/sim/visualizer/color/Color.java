@@ -1,5 +1,7 @@
 package ru.cos.sim.visualizer.color;
 
+import org.lwjgl.opengl.GL11;
+
 public class Color {
 
 	/**
@@ -82,5 +84,9 @@ public class Color {
 	public Color(int r , int g, int b , int a)
 	{
 		this(r/255.0f, g/255.0f, b/255.0f, a/255.0f);
+	}
+	
+	public void bind() {
+		GL11.glColor4f(r, g, b, a);
 	}
 }
