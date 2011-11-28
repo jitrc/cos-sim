@@ -1,6 +1,7 @@
 package ru.cos.sim.visualizer.scene.shapes;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -12,6 +13,9 @@ import ru.cos.sim.visualizer.renderer.Renderer.RenderType;
 import ru.cos.sim.visualizer.renderer.impl.IRenderable;
 import ru.cos.sim.visualizer.renderer.impl.IRenderable.FrustrumState;
 import ru.cos.sim.visualizer.scene.impl.IPlaceable;
+import ru.cos.sim.visualizer.texture.Texture;
+import ru.cos.sim.visualizer.texture.TextureLoader;
+import ru.cos.sim.visualizer.texture.TexturesManager;
 import ru.cos.sim.visualizer.trace.item.Lane;
 import ru.cos.sim.visualizer.trace.item.Segment;
 import ru.cos.sim.visualizer.traffic.core.SimulationSystemManager;
@@ -24,10 +28,13 @@ import ru.cos.sim.visualizer.traffic.utils.ViewFieldController;
 
 public class BaseSegmentForm extends AbstractItem implements IRenderable {
 
+	protected static final String marking1_5="/textures/roadNetwork/marking-1.5.png";
 	protected Segment segment ;
 	protected Side firstside;
 	protected Side secondside;
 	protected ViewFieldController vfcontroller;
+	protected Texture splitmarking; 
+	protected boolean texturesLoaded;
 	
 	public BaseSegmentForm(Segment segment) {
 		super();
@@ -39,6 +46,22 @@ public class BaseSegmentForm extends AbstractItem implements IRenderable {
 		vfcontroller.addSide(firstside);
 		vfcontroller.addSide(secondside);
 		
+		texturesLoaded = false;
+		
+	}
+	
+	private void loadTextures() {
+		if (!texturesLoaded) {
+			try {
+				splitmarking = TexturesManager.getInstance().getLoader().getTexture(marking1_5);
+			} catch (Exception e)
+			{
+				logger.log(Level.WARNING, "Can't load texture " + e.toString());
+				e.printStackTrace();
+			}
+			
+			texturesLoaded = true;
+		}
 	}
 
 	private void renderOverride(Side side, Vector2f basePoint)
@@ -82,6 +105,7 @@ public class BaseSegmentForm extends AbstractItem implements IRenderable {
 	
 	@Override
 	public void render(RenderType mode) {
+
 		Vector2f basePointf = new Vector2f(firstside.startX,firstside.startY);
 		Vector2f lastPointf = new Vector2f(firstside.endX,firstside.endY);
 		if (firstside.overrided) {
@@ -156,6 +180,8 @@ public class BaseSegmentForm extends AbstractItem implements IRenderable {
 		
 		
 		//glLineWidth(1.5f);
+		glEnable(GL_TEXTURE_2D);
+		loadTextures();
 		glLineStipple(3, (short) 0x00FF);
 		for (int i = 0 ; i < lanes.size() - 1; i++ ) {
 			Side s = segment.getLane(lanes.get(i)).getRightSide();
@@ -163,7 +189,7 @@ public class BaseSegmentForm extends AbstractItem implements IRenderable {
 		}
 		
 		glLineWidth(1.0f);
-		
+		glDisable(GL_TEXTURE_2D);
 		for (IPlaceable staff : segment.getStaff() ){
 			staff.preRender();
 			staff.render(mode);
@@ -176,7 +202,7 @@ public class BaseSegmentForm extends AbstractItem implements IRenderable {
 		glColor4f(1, 1, 1, 1);
 		Vector2f v = s.getVector();
 		Vector2f ort = new Vector2f(-v.y, v.x);
-		ort.normalizeLocal().multLocal(0.1f);
+		ort.normalizeLocal().multLocal(2.3f);
 		float stepLength = 6f;
 		float spaceLength = 3f;
 		float length = 0;
@@ -188,29 +214,43 @@ public class BaseSegmentForm extends AbstractItem implements IRenderable {
 		while (length < maxLength) {
 			
 			if (length + stepLength > maxLength) v.normalizeLocal().multLocal(maxLength - length);
-			glBegin(GL_TRIANGLES);
-				glVertex2f(point.x + ort.x, point.y+ort.y);
-				glVertex2f(point.x+v.x + ort.x, point.y+v.y+ort.y);
-				glVertex2f(point.x+v.x - ort.x, point.y+v.y-ort.y);
 			
-				glVertex2f(point.x+v.x - ort.x, point.y+v.y-ort.y);
-				glVertex2f(point.x - ort.x, point.y-ort.y);
-				glVertex2f(point.x + ort.x, point.y+ort.y);
+			splitmarking.bind();
+			glBegin(GL_QUADS);
+			glColor4f(1, 1, 1, 1);
+			glTexCoord2f(0, 0.1f);
+			glVertex2f(point.x + ort.x, point.y+ort.y);
+			glTexCoord2f(1, 0.1f);
+			glVertex2f(point.x+v.x + ort.x, point.y+v.y+ort.y);
+			glTexCoord2f(1, 0);
+			glVertex2f(point.x+v.x - ort.x, point.y+v.y-ort.y);
+			glTexCoord2f(0, 0);
+			glVertex2f(point.x - ort.x, point.y-ort.y);
+			
 			glEnd();
-			
-			glBegin(GL_LINES); 
-				glVertex2f(point.x + ort.x, point.y+ort.y);
-				glVertex2f(point.x+v.x + ort.x, point.y+v.y+ort.y);
-			
-				glVertex2f(point.x+v.x + ort.x, point.y+v.y+ort.y);
-				glVertex2f(point.x+v.x - ort.x, point.y+v.y-ort.y);
-			
-				glVertex2f(point.x+v.x - ort.x, point.y+v.y-ort.y);
-				glVertex2f(point.x - ort.x, point.y-ort.y);
-			
-				glVertex2f(point.x - ort.x, point.y-ort.y);
-				glVertex2f(point.x + ort.x, point.y+ort.y);
-			glEnd();
+//			glBegin(GL_TRIANGLES);
+//				glVertex2f(point.x + ort.x, point.y+ort.y);
+//				glVertex2f(point.x+v.x + ort.x, point.y+v.y+ort.y);
+//				glVertex2f(point.x+v.x - ort.x, point.y+v.y-ort.y);
+//			
+//				glVertex2f(point.x+v.x - ort.x, point.y+v.y-ort.y);
+//				glVertex2f(point.x - ort.x, point.y-ort.y);
+//				glVertex2f(point.x + ort.x, point.y+ort.y);
+//			glEnd();
+//			
+//			glBegin(GL_LINES); 
+//				glVertex2f(point.x + ort.x, point.y+ort.y);
+//				glVertex2f(point.x+v.x + ort.x, point.y+v.y+ort.y);
+//			
+//				glVertex2f(point.x+v.x + ort.x, point.y+v.y+ort.y);
+//				glVertex2f(point.x+v.x - ort.x, point.y+v.y-ort.y);
+//			
+//				glVertex2f(point.x+v.x - ort.x, point.y+v.y-ort.y);
+//				glVertex2f(point.x - ort.x, point.y-ort.y);
+//			
+//				glVertex2f(point.x - ort.x, point.y-ort.y);
+//				glVertex2f(point.x + ort.x, point.y+ort.y);
+//			glEnd();
 			length += stepLength;
 			if (length + spaceLength > maxLength) break; else {
 				point.x += space.x + v.x;

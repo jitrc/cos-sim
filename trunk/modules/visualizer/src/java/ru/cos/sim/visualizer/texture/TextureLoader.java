@@ -28,7 +28,12 @@ import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageInputStream;
 
 import org.lwjgl.BufferUtils;
+import static org.lwjgl.opengl.EXTFramebufferObject.*;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL14;
+
 import org.lwjgl.util.glu.GLU;
 
 /**
@@ -87,6 +92,63 @@ public class TextureLoader {
        GL11.glGenTextures(tmp); 
        return tmp.get(0);
     } 
+    
+    public Texture createTexture(String name, int width, int height){
+    	Texture tex = (Texture) table.get(name);
+        
+        if (tex != null) {
+            return tex;
+        }
+    	
+    	int result = createTextureID();
+    	
+    	GL11.glBindTexture(GL11.GL_TEXTURE_2D, result);
+    	GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+    	GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+    	GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+    	GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL14.GL_GENERATE_MIPMAP, GL11.GL_TRUE); // automatic mipmap
+    	GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0,
+    			GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, 0);
+    	GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+    	
+    	
+    	// create a renderbuffer object to store depth info
+    	IntBuffer ib = createIntBuffer(1);
+    	ib.put(result);
+    	glGenRenderbuffersEXT(ib);
+    	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, result);
+    	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL11.GL_DEPTH_COMPONENT,
+    	                         width, height);
+    	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+
+    	// create a framebuffer object
+    	ib = createIntBuffer(1);
+    	ib.put(result);
+    	glGenFramebuffersEXT(ib);
+    	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, result);
+
+    	// attach the texture to FBO color attachment point
+    	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
+    	                          GL11.GL_TEXTURE_2D, result, 0);
+
+    	// attach the renderbuffer to depth attachment point
+    	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,
+    	                             GL_RENDERBUFFER_EXT, result);
+
+    	// check FBO status
+    	boolean fboUsed = true;
+    	int status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+    	if(status != GL_FRAMEBUFFER_COMPLETE_EXT)
+    	    fboUsed = false;
+
+    	// switch back to window-system-provided framebuffer
+    	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+    	
+    	tex = new Texture(GL11.GL_TEXTURE_2D, result);
+    	table.put(name, result);
+    	return tex;
+    }
     
     /**
      * Load a texture
