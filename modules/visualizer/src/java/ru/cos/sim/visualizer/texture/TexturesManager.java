@@ -1,5 +1,7 @@
 package ru.cos.sim.visualizer.texture;
 
+import ru.cos.sim.visualizer.renderer.impl.IRenderable;
+
 public class TexturesManager {
 	private static TexturesManager instance; 
 	
@@ -19,5 +21,9 @@ public class TexturesManager {
 	{
 		return loader;
 	}
+	
+//	public Texture renderTotexture(IRenderable r){
+//		loader.createTexture(name, width, height);
+//	}
 	
 }
