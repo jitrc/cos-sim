@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="Standard Project for ${project.name}" default="make-all">
+
+	<!-- 
+	Following properties must be set prior tasks running:
+	* project.name - name of the project and jar file to be created
+	* project.dir - root project directory
+	* project.classpath - reference id for project classpath 
+	-->
+
+	<target name="make-all">
+		<description>Make project from scratch. Clean, Init, 
+		Compile, Compile Tests, Run Tests and Jar tasks/</description>
+		<antcall target="clean"/>
+		<antcall target="init"/>
+		<antcall target="compile" inheritrefs="true"/>
+		<antcall target="compile-tests" inheritrefs="true"/>
+		<antcall target="run-tests" inheritrefs="true"/>
+		<antcall target="make-jar"/>
+	</target>
+	
+	<target name="clean">
+		<description>Clean task must delete all build, distr and another items in the 
+		project tree that are not related to source codes. I.e. it must prepeare 
+		modeule to be commited to the repository.</description>
+		<delete includeemptydirs="true">
+			<fileset dir="${project.dir}" defaultexcludes="false">
+		    	<include name="build/**"/>
+		    	<include name="tests/build/**"/>
+		    	<include name="tests/reports/**"/>
+		    	<include name="distr/**"/>
+		    </fileset>
+		</delete>
+	</target>
+	
+	<target name="init">
+		<description>Make all build and auxilliary directories</description>
+		<mkdir dir="${project.dir}/src"/>
+		<mkdir dir="${project.dir}/src/java"/>
+		<mkdir dir="${project.dir}/build"/>
+		<mkdir dir="${project.dir}/build/java"/>
+		<mkdir dir="${project.dir}/tests/src"/>
+		<mkdir dir="${project.dir}/tests/src/java"/>
+		<mkdir dir="${project.dir}/tests/build/java"/>
+		<mkdir dir="${project.dir}/tests/reports"/>
+		<mkdir dir="${project.dir}/distr"/>
+	</target>
+	
+	<target name="compile">
+		<description>Compile source files and put them to the build directory</description>
+		<javac destdir="${project.dir}/build/java" debug="${compile.debug}" includeAntRuntime="false">
+			<src path="${project.dir}/src/java"/>
+			<classpath refid="project.classpath"/>
+		</javac>
+		<!-- Copy all resources from src to build-->
+		<copy todir="${project.dir}/build/java">
+			<fileset dir="${project.dir}/src/java">
+				<include name="**/*"/>
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="compile-tests">
+		<description>Compile tests and put results into tests/build</description>
+		<javac destdir="${project.dir}/tests/build/java" debug="${compile.debug}" includeantruntime="false">
+			<src path="${project.dir}/tests/src/java"/>
+			<classpath>
+				<path refid="project.classpath"/>
+				<path path="${project.dir}/build/java"/>
+			</classpath>
+		</javac>
+		<!-- Copy all resources from src to build-->
+		<copy todir="${project.dir}/tests/build/java">
+			<fileset dir="${project.dir}/tests/src/java">
+				<include name="**/*"/>
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="run-tests" depends="compile-tests">
+		<description>Run all tests under tests/src/java</description>
+		<junit printsummary="yes" haltonfailure="yes">
+			<classpath>
+				<path refid="project.classpath"/>
+			    <pathelement location="${project.dir}/tests/build/java"/>
+			    <pathelement location="${project.dir}/build/java"/>
+			</classpath>
+			<formatter type="plain" />
+			<batchtest fork="no" todir="${project.dir}/tests/reports">
+				<fileset dir="${project.dir}/tests/src/java">
+					<include name="**/*.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+	
+	<target name="make-jar">
+		<description>Create project's jar file from the compiled classes</description>
+		<property name="version.file" value="${project.dir}/version.properties"/>
+		<!-- Read version.properties-->
+		<property file="${version.file}" prefix="version"/>
+		<property name="version.major" value="0"/>
+		<property name="version.minor" value="0"/>
+		<property name="version.release" value="0"/>
+		<property name="version.build" value="0"/>
+		<tstamp prefix="timestamp"/>
+		<jar destfile="${project.dir}/distr/${project.name}.jar" >
+			<fileset dir="${project.dir}/build/java">
+				<include name="**/*"/>
+			</fileset>
+			<manifest>
+                <section name="Version">
+                    <attribute name="Version"
+                        value="${version.major}.${version.minor}.${version.release}.${version.build}"/>
+                    <attribute name="Build-timestamp"
+                        value="${timestamp.DSTAMP} ${timestamp.TSTAMP}"/>
+                    <attribute name="Build-user"
+                        value="${user.name}"/>
+                    <attribute name="Build-country"
+                        value="${user.country}"/>
+                    <attribute name="Build-timezone"
+                        value="${user.timezone}"/>
+                </section>
+			</manifest>
+		</jar>
+		<!-- Write new version number to the version.properties-->
+		<propertyfile file="${version.file}">
+		    <entry key="major" value="${version.major}"/>
+		    <entry key="minor" value="${version.major}"/>
+		    <entry key="release" value="${version.major}"/>
+		    <entry key="build" type="int" default="0" operation="+"/>
+		</propertyfile>
+	</target>
+	
+</project>

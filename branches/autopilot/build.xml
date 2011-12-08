@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project name="COS.SIM" basedir="." default="make-all">
+
+	<property environment="env"/>
+	<property file="${env.USERNAME}.properties"/>
+	<property file="build.properties"/>
+
+	<path id="classpath">
+		<fileset dir="libs">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	
+	<path id="lengthies.classpath">
+		<path refid="classpath"/>
+		<path location="utils.jar"/>
+	</path>
+	
+	<path id="engine.classpath">
+		<path refid="classpath"/>
+		<path location="utils.jar"/>
+		<path location="absf.jar"/>
+		<path location="lengthies.jar"/>
+	</path>
+	
+	<path id="ras-duo.classpath">
+		<path refid="classpath"/>
+		<path location="utils.jar"/>
+		<path location="absf.jar"/>
+		<path location="lengthies.jar"/>
+		<path location="engine.jar"/>
+	</path>
+	
+	<path id="visualizer.classpath">
+		<path refid="classpath"/>
+		<path location="utils.jar"/>
+		<path location="absf.jar"/>
+		<path location="lengthies.jar"/>
+		<path location="engine.jar"/>
+	</path>
+
+	<target name="make-distrib">
+		<mkdir dir="distr"/>
+		<copy todir="distr">
+			<fileset dir="${basedir}">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+		
+		<!-- Copy all required libs from "libs" folder -->
+		<copy todir="distr/libs">
+			<fileset dir="${basedir}/libs">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		
+		<!-- Copy demo maps to "distr/maps" folder -->
+		<copy todir="distr/maps">
+			<fileset dir="resources/maps">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		
+		<!-- Generate launch files -->
+		<antcall target="generate-launch-files"/>
+		
+		<!-- Create .version file -->
+		<property name="version.file" value="version.properties"/>
+		<!-- Read version.properties-->
+		<property file="${version.file}" prefix="version"/>
+		<property name="version.major" value="0"/>
+		<property name="version.minor" value="0"/>
+		<property name="version.release" value="0"/>
+		<property name="version.build" value="0"/>
+		<tstamp prefix="timestamp"/>
+		<!-- Write new version number to the version.properties -->
+		<propertyfile file="${version.file}">
+		    <entry key="major" value="${version.major}"/>
+		    <entry key="minor" value="${version.major}"/>
+		    <entry key="release" value="${version.major}"/>
+		    <entry key="build" type="int" default="0" operation="+"/>
+		</propertyfile>
+		<!-- Write to .version files -->
+		<propertyfile file="distr/.version">
+		    <entry key="Version" value="${version.major}.${version.minor}.${version.release}.${version.build}"/>
+		    <entry key="Build-date" value="${timestamp.DSTAMP} ${timestamp.TSTAMP} ${user.timezone}"/>
+		    <entry key="Builded-by" value="${user.name}"/>
+		</propertyfile>
+		
+	</target>
+	
+	<target name="make-all">
+		<description>Make whole COS.SIM project from scratch</description>
+		<antcall target="utils-make-all"/>
+		<antcall target="absf-make-all"/>
+		<antcall target="lengthies-make-all"/>
+		<antcall target="engine-make-all"/>
+		<antcall target="ras-duo-make-all"/>
+		<antcall target="visualizer-make-all"/>
+		<antcall target="make-distrib"></antcall>
+	</target>
+
+	<target name="utils-make-all">
+		<description>Make Utils project from scratch</description>
+		<property name="name" value="utils"/>
+		<ant antfile="standard-build.xml" target="make-all">
+			<property name="project.name" value="${name}"/>
+			<property name="project.dir" value="modules/${name}"/>
+			<reference refid="classpath" torefid="project.classpath" />
+		</ant>
+		<copy file="modules/${name}/distr/${name}.jar" todir="${basedir}"/>
+	</target>
+
+	<target name="absf-make-all">
+		<description>Make COS.ABSF project from scratch</description>
+		<property name="name" value="absf"/>
+		<ant antfile="standard-build.xml" target="make-all">
+			<property name="project.name" value="${name}"/>
+			<property name="project.dir" value="modules/${name}"/>
+			<reference refid="classpath" torefid="project.classpath" />
+		</ant>
+		<copy file="modules/${name}/distr/${name}.jar" todir="${basedir}"/>
+	</target>
+
+	<target name="lengthies-make-all">
+		<description>Make Lengthies project from scratch</description>
+		<property name="name" value="lengthies"/>
+		<ant antfile="standard-build.xml" target="make-all">
+			<property name="project.name" value="${name}"/>
+			<property name="project.dir" value="modules/${name}"/>
+			<reference refid="lengthies.classpath" torefid="project.classpath" />
+		</ant>
+		<copy file="modules/${name}/distr/${name}.jar" todir="${basedir}"/>
+	</target>
+
+	<target name="engine-make-all">
+		<description>Make Traffic Simulation Engine project from scratch</description>
+		<property name="name" value="engine"/>
+		<ant antfile="standard-build.xml" target="make-all">
+			<property name="project.name" value="${name}"/>
+			<property name="project.dir" value="modules/${name}"/>
+			<reference refid="engine.classpath" torefid="project.classpath" />
+		</ant>
+		<copy file="modules/${name}/distr/${name}.jar" todir="${basedir}"/>
+	</target>
+
+	<target name="ras-duo-make-all">
+		<description>Make Route Assignment System (DUO) project from scratch</description>
+		<property name="name" value="ras-duo"/>
+		<ant antfile="standard-build.xml" target="make-all">
+			<property name="project.name" value="${name}"/>
+			<property name="project.dir" value="modules/${name}"/>
+			<reference refid="ras-duo.classpath" torefid="project.classpath" />
+		</ant>
+		<copy file="modules/${name}/distr/${name}.jar" todir="${basedir}"/>
+	</target>
+
+	<target name="visualizer-make-all">
+		<description>Make Visualizer project from scratch</description>
+		<property name="name" value="visualizer"/>
+		<ant antfile="standard-build.xml" target="make-all">
+			<property name="project.name" value="${name}"/>
+			<property name="project.dir" value="modules/${name}"/>
+			<reference refid="visualizer.classpath" torefid="project.classpath" />
+		</ant>
+		<copy file="modules/${name}/distr/${name}.jar" todir="${basedir}"/>
+	</target>
+	
+	<target name="clean">
+		<description>Clean project before commit to repository</description>
+		<antcall target="utils-clean"/>
+		<antcall target="absf-clean"/>
+		<antcall target="lengthies-clean"/>
+		<antcall target="engine-clean"/>
+		<antcall target="ras-duo-clean"/>
+		<antcall target="visualizer-clean"/>
+		<delete includeemptydirs="true">
+			<fileset dir="${basedir}">
+		    	<include name="distr/**"/>
+		    	<include name="absf.jar"/>
+		    	<include name="utils.jar"/>
+   				<include name="lengthies.jar"/>
+   				<include name="engine.jar"/>
+   				<include name="visualizer.jar**"/>
+   				<include name="ras-duo.jar"/>
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="utils-clean">
+		<description>Clean Utils project before commit</description>
+		<property name="name" value="utils"/>
+		<ant antfile="standard-build.xml" target="clean">
+			<property name="project.name" value="${name}"/>
+			<property name="project.dir" value="modules/${name}"/>
+			<reference refid="classpath" torefid="project.classpath" />
+		</ant>
+	</target>
+
+	<target name="absf-clean">
+		<description>Clean COS.ABSF project before commit</description>
+		<property name="name" value="absf"/>
+		<ant antfile="standard-build.xml" target="clean">
+			<property name="project.name" value="${name}"/>
+			<property name="project.dir" value="modules/${name}"/>
+			<reference refid="classpath" torefid="project.classpath" />
+		</ant>
+	</target>
+
+	<target name="lengthies-clean">
+		<description>Clean Lengthies project before commit</description>
+		<property name="name" value="lengthies"/>
+		<ant antfile="standard-build.xml" target="clean">
+			<property name="project.name" value="${name}"/>
+			<property name="project.dir" value="modules/${name}"/>
+			<reference refid="classpath" torefid="project.classpath" />
+		</ant>
+	</target>
+
+	<target name="engine-clean">
+		<description>Clean Traffic Simulation Engine project before commit</description>
+		<property name="name" value="engine"/>
+		<ant antfile="standard-build.xml" target="clean">
+			<property name="project.name" value="${name}"/>
+			<property name="project.dir" value="modules/${name}"/>
+			<reference refid="engine.classpath" torefid="project.classpath" />
+		</ant>
+	</target>
+
+	<target name="ras-duo-clean">
+		<description>Clean Route Assignment System (DUO) project before commit</description>
+		<property name="name" value="ras-duo"/>
+		<ant antfile="standard-build.xml" target="clean">
+			<property name="project.name" value="${name}"/>
+			<property name="project.dir" value="modules/${name}"/>
+			<reference refid="ras-duo.classpath" torefid="project.classpath" />
+		</ant>
+	</target>
+
+	<target name="visualizer-clean">
+		<description>Clean Visualizer project before commit</description>
+		<property name="name" value="visualizer"/>
+		<ant antfile="standard-build.xml" target="clean">
+			<property name="project.name" value="${name}"/>
+			<property name="project.dir" value="modules/${name}"/>
+			<reference refid="visualizer.classpath" torefid="project.classpath" />
+		</ant>
+	</target>
+	
+	<target name="make-javadoc">
+		  <delete dir="docs/javadoc" includeemptydirs="true">
+		  </delete>
+		  <javadoc 
+		           destdir="docs/javadoc"
+		           author="true"
+		           version="true"
+		           use="true"
+		           windowtitle="COS.SIM Agent Based Traffic Simulation"
+		  		   executable="${env.JAVA_HOME}/bin/javadoc">
+		  	<sourcepath path="modules/utils/src/java"/>
+		  	<sourcepath path="modules/absf/src/java"/>
+			<sourcepath path="modules/lengthies/src/java"/>
+			<sourcepath path="modules/engine/src/java"/>
+			<sourcepath path="modules/ras-duo/src/java"/>
+		  	<sourcepath path="modules/visualizer/src/java"/>
+		    <doctitle><![CDATA[<h1>COS.SIM Agent Based Traffic Simulation</h1>]]></doctitle>
+		    <bottom><![CDATA[<i>Copyright &#169; 2011 COS&HT, www.traffic.cos.ru. All Rights Reserved.</i>]]></bottom>
+		    <tag name="todo" scope="all" description="To do:"/>
+		    <link href="http://download.oracle.com/javase/6/docs/api/"/>
+		    <link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>
+		  </javadoc>
+	</target>
+	
+	<target name="generate-launch-files">
+		<path id="jars-path">
+			<fileset dir="distr">
+				<include name="*.jar"/>
+				<include name="libs/*.jar"/>
+			</fileset>
+		</path>
+		<path id="absolute-project-path">
+			<pathelement path="distr"/>
+		</path>
+		
+		<pathconvert dirsep="/" pathsep=";" property="win-abs-proj-path" refid="absolute-project-path"/>
+		<pathconvert dirsep="/" pathsep=":" property="unix-abs-proj-path" refid="absolute-project-path"/>
+		
+		<pathconvert setonempty="true" property="windows-jars" refid="jars-path">
+			<map from="${win-abs-proj-path}" to="."/>
+		</pathconvert>
+		<pathconvert setonempty="true" dirsep="/" property="unix-jars" refid="jars-path">
+			<map from="${unix-abs-proj-path}" to="."/>
+		</pathconvert>
+		
+		<pathconvert setonempty="true" property="windows-classpath" refid="jars-path">
+			<map from="${win-abs-proj-path}" to="."/>
+		</pathconvert>
+		<pathconvert setonempty="true" dirsep="/" pathsep=":" property="unix-classpath" refid="jars-path">
+			<map from="${unix-abs-proj-path}" to="."/>
+		</pathconvert>
+
+		<echo file="distr/launch.bat">start javaw -Djava.library.path=./libs/native/windows -cp "${windows-classpath}" ru.cos.sim.visualizer.main.Main</echo>
+		<!--<echo file="distr/launch.sh">java -Djava.library.path=./libs/native/linux -cp "${unix-classpath}" ru.cos.sim.visualizer.main.Main</echo> -->
+
+		<!--
+		<echo file="assembly/mapGenerator.bat">java -cp "${windows-classpath};${windows-jars};." ru.cos.sim.visualizer.traffic.verification.maps.MapGenerator %1 %2</echo>
+		<echo file="assembly/mapGenerator.sh">java -cp "${unix-classpath}:${unix-jars}:." ru.cos.sim.visualizer.traffic.verification.maps.MapGenerator $1 $2</echo>
+
+		<echo file="assembly/batchProcessor.bat">java -Xmx1g -cp "${windows-classpath};${windows-bp-bootstrap-jar};." -Dbp.classpath.modules="${windows-jars}" ru.cos.sim.visualizer.traffic.verification.bp.bootstrap.BatchProcessor %1 %2</echo>
+		<echo file="assembly/batchProcessor.sh">java -Xmx1g -cp "${unix-classpath}:${unix-bp-bootstrap-jar}:." -Dbp.classpath.modules="${unix-jars}" ru.cos.sim.visualizer.traffic.verification.bp.bootstrap.BatchProcessor $1 $2</echo>
+
+		<echo file="assembly/tsrViewer.bat">start javaw -Xms5m -Xmx128m -XX:MaxHeapFreeRatio=50 -XX:MinHeapFreeRatio=40 -cp "${windows-classpath};${windows-jars};." ru.cos.sim.visualizer.traffic.graphs.report.StandaloneReportViewer %1 %2</echo>
+		<echo file="assembly/tsrViewer.sh">java -Xms5m -Xmx128m -XX:MaxHeapFreeRatio=50 -XX:MinHeapFreeRatio=40 -cp "${unix-classpath}:${unix-jars}:." ru.cos.sim.visualizer.traffic.graphs.report.StandaloneReportViewer $1 $2</echo>
+		
+		<echo file="${assembly}/launchConsole.bat">start java -cp "${windows-classpath};." ru.cos.sim.visualizer.traffic.controller.cio.ConsoleController %1 %2</echo>
+		<echo file="${assembly}/launchConsole.sh">java -cp "${unix-classpath}:." ru.cos.sim.visualizer.traffic.controller.cio.ConsoleController $1 $2</echo>
+		-->
+		
+		<chmod dir="distr" perm="u+x" includes="**/*.sh"/>
+
+	</target>	
+	
+</project>
