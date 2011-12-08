@@ -9,7 +9,6 @@ import java.awt.image.ColorModel;
 import java.awt.image.ComponentColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
-import java.awt.image.DataBufferInt;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.File;
@@ -27,13 +26,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageInputStream;
 
-import org.lwjgl.BufferUtils;
-import static org.lwjgl.opengl.EXTFramebufferObject.*;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL14;
-
 import org.lwjgl.util.glu.GLU;
 
 /**
@@ -93,63 +86,6 @@ public class TextureLoader {
        return tmp.get(0);
     } 
     
-    public Texture createTexture(String name, int width, int height){
-    	Texture tex = (Texture) table.get(name);
-        
-        if (tex != null) {
-            return tex;
-        }
-    	
-    	int result = createTextureID();
-    	
-    	GL11.glBindTexture(GL11.GL_TEXTURE_2D, result);
-    	GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-    	GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
-    	GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-    	GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL14.GL_GENERATE_MIPMAP, GL11.GL_TRUE); // automatic mipmap
-    	GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0,
-    			GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, 0);
-    	GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-    	
-    	
-    	// create a renderbuffer object to store depth info
-    	IntBuffer ib = createIntBuffer(1);
-    	ib.put(result);
-    	glGenRenderbuffersEXT(ib);
-    	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, result);
-    	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL11.GL_DEPTH_COMPONENT,
-    	                         width, height);
-    	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
-
-    	// create a framebuffer object
-    	ib = createIntBuffer(1);
-    	ib.put(result);
-    	glGenFramebuffersEXT(ib);
-    	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, result);
-
-    	// attach the texture to FBO color attachment point
-    	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
-    	                          GL11.GL_TEXTURE_2D, result, 0);
-
-    	// attach the renderbuffer to depth attachment point
-    	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,
-    	                             GL_RENDERBUFFER_EXT, result);
-
-    	// check FBO status
-    	boolean fboUsed = true;
-    	int status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-    	if(status != GL_FRAMEBUFFER_COMPLETE_EXT)
-    	    fboUsed = false;
-
-    	// switch back to window-system-provided framebuffer
-    	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-    	
-    	tex = new Texture(GL11.GL_TEXTURE_2D, result);
-    	table.put(name, result);
-    	return tex;
-    }
-    
     /**
      * Load a texture
      *
@@ -177,111 +113,6 @@ public class TextureLoader {
         
         return tex;
     }
-    
-    /**
-     * Load a texture
-     *
-     * @param resourceName The location of the resource to load
-     * @return The loaded texture
-     * @throws IOException Indicates a failure to access the resource
-     */
-    public Texture getTexture(String resourceName,BufferedImage img) throws IOException {
-        Texture tex = (Texture) table.get(resourceName);
-        
-        if (tex != null) {
-            return tex;
-        }
-        
-        logger.log(Level.INFO,"Loading texture " + resourceName);
-        
-//        tex = getTexture(resourceName,
-//                         GL11.GL_TEXTURE_2D,
-//                         img,// target
-//                         GL11.GL_RGBA,     // dst pixel format
-//                         GL11.GL_NEAREST, // min filter (unused)
-//                         GL11.GL_NEAREST_MIPMAP_NEAREST);
-        tex = new Texture(GL11.GL_TEXTURE_2D, loadImage(img));
-        
-        table.put(resourceName,tex);
-        
-        return tex;
-    }
-    
-    public static byte[] intToByteArray(int value) {
-        return new byte[] {
-                (byte)(value >>> 24),
-                (byte)(value >>> 16),
-                (byte)(value >>> 8),
-                (byte)value};
-	}
-    
-    public static int loadImage(BufferedImage bufferedImage) {
-	    try {
-		    short width       = (short)bufferedImage.getWidth();
-		    short height      = (short)bufferedImage.getHeight();
-		    //textureLoader.bpp = bufferedImage.getColorModel().hasAlpha() ? (byte)32 : (byte)24;
-		    int bpp = (byte)bufferedImage.getColorModel().getPixelSize();
-		    ByteBuffer byteBuffer;
-		    DataBuffer db = bufferedImage.getData().getDataBuffer();
-		    if (db instanceof DataBufferInt) {
-		    	int intI[] = ((DataBufferInt)(bufferedImage.getData().getDataBuffer())).getData();
-		    	byte newI[] = new byte[intI.length * 4];
-		    	for (int i = 0; i < intI.length; i++) {
-		    		byte b[] = intToByteArray(intI[i]);
-		    		int newIndex = i*4;
-		    		
-		    		newI[newIndex]   = b[1];
-		    		newI[newIndex+1] = b[2];
-		    		newI[newIndex+2] = b[3];
-		    		newI[newIndex+3] = b[0];
-		    	}
-		    	
-		    	byteBuffer  = ByteBuffer.allocateDirect(
-		    			width*height*(bpp/8))
-			                           .order(ByteOrder.nativeOrder())
-			                            .put(newI);
-		    } else {
-		    	byteBuffer  = ByteBuffer.allocateDirect(
-		    			width*height*(bpp/8))
-			                           .order(ByteOrder.nativeOrder())
-			                            .put(((DataBufferByte)(bufferedImage.getData().getDataBuffer())).getData());
-		    }
-		    byteBuffer.flip();
-		    
-		    
-		    int internalFormat = GL11.GL_RGBA8,
-			format = GL11.GL_RGBA;
-			IntBuffer   textureId =  BufferUtils.createIntBuffer(1);;
-			GL11.glGenTextures(textureId);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId.get(0));
-			
-
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
-			
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
-			
-			GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
-			
-			
-			
-			GLU.gluBuild2DMipmaps(GL11.GL_TEXTURE_2D,
-			      internalFormat,
-			      width,
-			      height,
-			      format,
-			      GL11.GL_UNSIGNED_BYTE,
-			      byteBuffer);
-			return textureId.get(0);
-		    
-		} catch (Exception e) {
-	    	e.printStackTrace();
-	    	System.exit(-1);
-	    }
-		
-		return -1;
-	}
     
     
     /**
@@ -388,81 +219,6 @@ public class TextureLoader {
         
         return texture; 
     } 
-    
-    /**
-     * Load a texture into OpenGL from a Buffered Image
-     * 
-     *
-     * @param resourceName The location of the resource to load
-     * @param target The GL target to load the texture against
-     * @param dstPixelFormat The pixel format of the screen
-     * @param minFilter The minimising filter
-     * @param magFilter The magnification filter
-     * @return The loaded texture
-     * @throws IOException Indicates a failure to access the resource
-     */
-    public Texture getTexture(String resourceName,
-                              int target, 
-                              BufferedImage bufferedImage,
-                              int dstPixelFormat, 
-                              int minFilter, 
-                              int magFilter) throws IOException 
-    { 
-        int srcPixelFormat = 0;
-        
-        // create the texture ID for this texture 
-        int textureID = createTextureID(); 
-        Texture texture = new Texture(target,textureID); 
-        
-        // bind this texture 
-        GL11.glBindTexture(target, textureID); 
-  
-        texture.setWidth(bufferedImage.getWidth());
-        texture.setHeight(bufferedImage.getHeight());
-        
-        if (bufferedImage.getColorModel().hasAlpha()) {
-            srcPixelFormat = GL11.GL_RGBA;
-        } else {
-            srcPixelFormat = GL11.GL_RGB;
-        }
-
-        // convert that image into a byte buffer of texture data 
-        ByteBuffer textureBuffer = convertImageData(bufferedImage,texture); 
-        
-        if (target == GL11.GL_TEXTURE_2D) 
-        { 
-            //GL11.glTexParameteri(target, GL11.GL_TEXTURE_MIN_FILTER, minFilter); 
-            //GL11.glTexParameteri(target, GL11.GL_TEXTURE_MAG_FILTER, magFilter); 
-        } 
- 
-        // produce a texture from the byte buffer
-        
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_NEAREST);
-      /*  GL11.glTexEnvi ( GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_BLEND );
-        */GLU.gluBuild2DMipmaps(target, 
-                srcPixelFormat,
-                //bufferedImage.getWidth(), 
-                //bufferedImage.getHeight(),
-                get2Fold(bufferedImage.getWidth()), 
-                get2Fold(bufferedImage.getHeight()), 
-                
-                srcPixelFormat, 
-                GL11.GL_UNSIGNED_BYTE, 
-                textureBuffer);
-       /* GL11.glTexImage2D(target, 
-                      0, 
-                      dstPixelFormat, 
-                      get2Fold(bufferedImage.getWidth()), 
-                      get2Fold(bufferedImage.getHeight()), 
-                      0, 
-                      srcPixelFormat, 
-                      GL11.GL_UNSIGNED_BYTE, 
-                      textureBuffer ); */
-        
-        return texture; 
-    } 
-    
     
     /**
      * Get the closest greater power of 2 to the fold number
