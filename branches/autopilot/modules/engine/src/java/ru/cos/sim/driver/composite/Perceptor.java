@@ -3,6 +3,7 @@
  */
 package ru.cos.sim.driver.composite;
 
+import ru.cos.sim.driver.CompositeDriver;
 import ru.cos.sim.road.RoadTrajectory;
 import ru.cos.sim.road.link.Lane;
 

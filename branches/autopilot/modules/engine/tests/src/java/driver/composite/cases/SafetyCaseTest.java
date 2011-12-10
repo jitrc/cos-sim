@@ -19,7 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ru.cos.sim.communication.FrameProperties;
-import ru.cos.sim.driver.composite.CompositeDriver;
+import ru.cos.sim.driver.CompositeDriver;
 import ru.cos.sim.driver.composite.Perception;
 import ru.cos.sim.driver.composite.cases.SafetyCase;
 import ru.cos.sim.driver.composite.framework.HandRange;

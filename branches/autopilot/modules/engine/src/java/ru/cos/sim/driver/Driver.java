@@ -4,12 +4,13 @@ import ru.cos.cs.lengthy.Router;
 import ru.cos.sim.utils.Hand;
 import ru.cos.sim.utils.Pair;
 import ru.cos.sim.vehicle.RegularVehicle;
+import ru.cos.sim.vehicle.Vehicle;
 
 /**
  * 
  * @author zroslaw
  */
-public interface Driver extends Router {
+public interface Driver{
 	
 	public enum DriverType{
 		/**
@@ -26,11 +27,16 @@ public interface Driver extends Router {
 		IntelligentDriver
 	}
 
+	/**
+	 * Initialize driver cases
+	 * @return
+	 */
 	public Pair<Float, Hand> drive(float dt);
 
-	public RegularVehicle getVehicle();
+	public Vehicle getVehicle();
 	
 	public void setVehicle(RegularVehicle vehicle);
 	
 	public DriverType getDriverType();
+	public DriverRouter getDriverRouter();
 }

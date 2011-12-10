@@ -4,7 +4,6 @@
 package ru.cos.sim.driver.composite.cases.utils;
 
 import ru.cos.sim.driver.composite.Perception;
-import ru.cos.sim.road.objects.AbstractRoadObject;
 import ru.cos.sim.road.objects.RoadObject;
 import ru.cos.sim.road.objects.RoadObject.RoadObjectType;
 import ru.cos.sim.vehicle.Vehicle;
@@ -102,8 +101,8 @@ public class MOBILCalculator {
 	}
 
 	private float calculateAcceleration(Vehicle vehicle, RoadObject obstacle, float distance) {
-		idmCalculator.setFrontVehicleSpeed(obstacle.getSpeed());
-		idmCalculator.setSpeed(vehicle.getSpeed());
+		idmCalculator.setFrontVehicleSpeed(obstacle.getMovement().getSpeed());
+		idmCalculator.setSpeed(vehicle.getMovement().getSpeed());
 		idmCalculator.setDistance(distance);
 		return idmCalculator.calculate();
 	}
@@ -119,15 +118,15 @@ public class MOBILCalculator {
 	
 }
 
-class DumbRoadObject extends AbstractRoadObject{
-
-	public DumbRoadObject(float speed){
-		this.speed = speed;
-	}
-	
-	@Override
-	public RoadObjectType getRoadObjectType() {
-		return null;
-	}
-	
-}
+//class DumbRoadObject extends AbstractRoadObject{
+//
+//	public DumbRoadObject(float speed){
+//		this.speed = speed;
+//	}
+//	
+//	@Override
+//	public RoadObjectType getRoadObjectType() {
+//		return null;
+//	}
+//	
+//}

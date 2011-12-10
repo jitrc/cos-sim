@@ -1,6 +1,8 @@
 package ru.cos.sim.vehicle;
 
+import ru.cos.sim.Movement;
 import ru.cos.sim.agents.TrafficAgent;
+import ru.cos.sim.driver.Driver;
 import ru.cos.sim.road.objects.RectangleRoadObject;
 
 
@@ -34,13 +36,6 @@ public interface Vehicle extends RectangleRoadObject, TrafficAgent{
 	public String getVehicleId();
 	
 	/**
-	 * Get vehicle's speed
-	 * @return vehicle's speed
-	 */
-	@Override
-	public float getSpeed();
-	
-	/**
 	 * Get vehicle type
 	 * @return vehicle type
 	 */
@@ -71,4 +66,7 @@ public interface Vehicle extends RectangleRoadObject, TrafficAgent{
 	 */
 	public float getTravelDistance();
 	
+	public Driver getDriver();
+	@Override
+	public Movement getMovement();
 }

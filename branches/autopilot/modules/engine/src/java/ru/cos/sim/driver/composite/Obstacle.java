@@ -6,6 +6,7 @@ package ru.cos.sim.driver.composite;
 import java.util.List;
 
 import ru.cos.cs.lengthy.Observation;
+import ru.cos.sim.Movement;
 import ru.cos.sim.road.exceptions.RoadNetworkException;
 import ru.cos.sim.road.objects.AbstractRoadObject;
 import ru.cos.sim.road.objects.RoadObject;
@@ -76,6 +77,12 @@ public class Obstacle extends AbstractRoadObject{
 			if (getObstacleType(roadObject)!=null)
 				return observation;
 		}
+		return null;
+	}
+
+	@Override
+	public Movement getMovement() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 	

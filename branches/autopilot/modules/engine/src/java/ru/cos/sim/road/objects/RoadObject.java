@@ -4,6 +4,7 @@
 package ru.cos.sim.road.objects;
 
 import ru.cos.cs.lengthy.objects.Point;
+import ru.cos.sim.Movement;
 import ru.cos.sim.utils.Hand;
 
 /**
@@ -64,13 +65,7 @@ public interface RoadObject extends Point {
 	 * Get object's speed.
 	 * @return speed of the object
 	 */
-	public float getSpeed();
-	
-	/**
-	 * Set object's speed.
-	 * @param speed to set
-	 */
-	public void setSpeed(float speed);
+	public Movement getMovement();
 	
 	/**
 	 * Get type of road object.

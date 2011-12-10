@@ -25,7 +25,7 @@ public class VehicleDTO extends AbstractDTO {
 		this.agentId = vehicle.getAgentId();
 		this.vehicleId = vehicle.getVehicleId();
 		this.location = LocationData.createInstance(vehicle);
-		this.speed = vehicle.getSpeed();
+		this.speed = vehicle.getMovement().getSpeed();
 		this.vehicleClass = vehicle.getVehicleClass();
 		this.length = vehicle.getLength();
 		this.width = vehicle.getWidth();

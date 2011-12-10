@@ -7,7 +7,7 @@ import java.util.List;
 
 import ru.cos.sim.agents.tlns.TrafficLight;
 import ru.cos.sim.agents.tlns.TrafficLightSignal;
-import ru.cos.sim.driver.composite.CompositeDriver;
+import ru.cos.sim.driver.CompositeDriver;
 import ru.cos.sim.driver.composite.CompositeDriverParameters;
 import ru.cos.sim.driver.composite.Perception;
 import ru.cos.sim.driver.composite.Percepts;

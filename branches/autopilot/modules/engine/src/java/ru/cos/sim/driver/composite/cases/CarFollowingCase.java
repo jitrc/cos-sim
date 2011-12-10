@@ -4,7 +4,7 @@
 package ru.cos.sim.driver.composite.cases;
 
 import static ru.cos.sim.driver.composite.framework.Priority.CarFollowing;
-import ru.cos.sim.driver.composite.CompositeDriver;
+import ru.cos.sim.driver.CompositeDriver;
 import ru.cos.sim.driver.composite.Perception;
 import ru.cos.sim.driver.composite.Percepts;
 import ru.cos.sim.driver.composite.cases.utils.IDMCalculator;
