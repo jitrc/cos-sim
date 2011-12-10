@@ -14,13 +14,13 @@ public interface Router {
 	 * @param join join instance to choose prev lengthy
 	 * @return prev lengthy in the route
 	 */
-	public Lengthy chooseNextLengthy(Join join);
+	public Lengthy getPrevLengthy(Join join);
 	
 	/**
 	 * Choose route's backward lengthy on the fork
 	 * @param fork fork instance to choose next lengthy 
 	 * @return next lengthy in the route
 	 */
-	public Lengthy chooseNextLengthy(Fork fork);
+	public Lengthy getNextLengthy(Fork fork);
 	
 }

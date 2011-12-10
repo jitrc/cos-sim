@@ -46,16 +46,6 @@ public abstract class AbstractRoadObject extends PointImpl implements RoadObject
 	}
 
 	@Override
-	public float getSpeed() {
-		return speed;
-	}
-
-	@Override
-	public void setSpeed(float speed) {
-		this.speed = speed;
-	}
-
-	@Override
 	public Hand getShiftHand() {
 		return shift==0?null:shift>0?Hand.Right:Hand.Left;
 	}

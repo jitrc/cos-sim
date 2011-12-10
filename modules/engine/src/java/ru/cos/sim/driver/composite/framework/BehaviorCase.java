@@ -3,13 +3,16 @@
  */
 package ru.cos.sim.driver.composite.framework;
 
+import ru.cos.sim.driver.data.IDMDriverParameters;
+
 
 /**
  * 
  * @author zroslaw
  */
-public abstract class BehaviorCase {
+public interface BehaviorCase {
 
-	public abstract CCRange behave(float dt);
+	CCRange behave(float dt);
+	void init(IDMDriverParameters parameters);
 	
 }

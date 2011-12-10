@@ -6,7 +6,7 @@ package ru.cos.sim.driver.composite.cases;
 import java.util.HashSet;
 import java.util.Set;
 
-import ru.cos.sim.driver.composite.CompositeDriver;
+import ru.cos.sim.driver.CompositeDriver;
 import ru.cos.sim.driver.composite.framework.AbstractBehaviorCase;
 import ru.cos.sim.driver.composite.framework.CCRange;
 import ru.cos.sim.driver.composite.framework.HandRange;

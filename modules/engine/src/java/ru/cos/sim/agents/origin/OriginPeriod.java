@@ -8,9 +8,9 @@ import java.util.Set;
 
 
 
+import ru.cos.sim.driver.CompositeDriver;
 import ru.cos.sim.driver.Driver;
 import ru.cos.sim.driver.Driver.DriverType;
-import ru.cos.sim.driver.composite.CompositeDriver;
 import ru.cos.sim.engine.RoadNetworkUniverse;
 import ru.cos.sim.utils.ProbabilityArray;
 import ru.cos.sim.vehicle.RegularVehicle;

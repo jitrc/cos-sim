@@ -7,7 +7,7 @@ import ru.cos.sim.driver.composite.Perception;
 import ru.cos.sim.driver.data.IDMDriverParameters;
 import ru.cos.sim.road.objects.BlockRoadObject;
 import ru.cos.sim.road.objects.RoadObject;
-import ru.cos.sim.vehicle.RegularVehicle;
+import ru.cos.sim.vehicle.Vehicle;
 
 /**
  * Calculation of acceleration according to IDM model.
@@ -38,11 +38,11 @@ public class IDMCalculator {
 		abruptness = driver.getIdmAbruptness();
 	}
 
-	public float calculate(RegularVehicle vehicle, Perception frontVehicle) {
+	public float calculate(Vehicle vehicle, Perception frontVehicle) {
 		if (frontVehicle==null) frontVehicle = new Perception(Float.MAX_VALUE, new BlockRoadObject());
-		setSpeed(vehicle.getSpeed());
+		setSpeed(vehicle.getMovement().getSpeed());
 		RoadObject roadObject = frontVehicle.getRoadObject();
-		setFrontVehicleSpeed(roadObject.getSpeed());
+		setFrontVehicleSpeed(roadObject.getMovement().getSpeed());
 		setDistance(frontVehicle.getDistance());
 		return calculate();
 	}

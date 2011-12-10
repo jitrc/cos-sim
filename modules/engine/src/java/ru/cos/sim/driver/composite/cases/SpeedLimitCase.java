@@ -5,7 +5,7 @@ package ru.cos.sim.driver.composite.cases;
 
 import java.util.List;
 
-import ru.cos.sim.driver.composite.CompositeDriver;
+import ru.cos.sim.driver.CompositeDriver;
 import ru.cos.sim.driver.composite.Perception;
 import ru.cos.sim.driver.composite.Percepts;
 import ru.cos.sim.driver.composite.TrajectoryPercepts;
@@ -68,11 +68,11 @@ public class SpeedLimitCase extends AbstractBehaviorCase {
 		if (prevFrontSpeedLimit!=null){
 			SpeedLimitSign speedLimitSign = (SpeedLimitSign)prevFrontSpeedLimit.getRoadObject();
 			float frontSpeedLimit = speedLimitSign.getSpeedLimit();
-			if (driver.getVehicle().getSpeed()>frontSpeedLimit){
+			if (driver.getVehicle().getMovement().getSpeed()>frontSpeedLimit){
 				idmCalculator.setDistance(prevFrontSpeedLimit.getActualDistance()+driver.getParameters().getMinDistance());
 				idmCalculator.setFrontVehicleSpeed(0);
 				idmCalculator.setMaxSpeed(currentSpeedLimit-frontSpeedLimit);
-				idmCalculator.setSpeed(driver.getVehicle().getSpeed()-frontSpeedLimit);
+				idmCalculator.setSpeed(driver.getVehicle().getMovement().getSpeed()-frontSpeedLimit);
 				float frontSignAcceleration = idmCalculator.calculate();
 				if (frontSignAcceleration<acceleration) acceleration = frontSignAcceleration;
 			}

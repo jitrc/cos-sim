@@ -5,7 +5,6 @@ package ru.cos.sim.vehicle;
 
 import static ru.cos.sim.utils.Hand.Left;
 import static ru.cos.sim.utils.Hand.Right;
-import ru.cos.cs.lengthy.Router;
 import ru.cos.sim.exceptions.TrafficSimulationException;
 import ru.cos.sim.road.RoadTrajectory;
 import ru.cos.sim.road.link.Lane;
@@ -21,7 +20,7 @@ import ru.cos.sim.utils.Pair;
  * Abstract vehicle implementation.
  * @author zroslaw
  */
-public abstract class AbstractVehicle extends AbstractRectangleRoadObject implements Vehicle, Router{
+public abstract class AbstractVehicle extends AbstractRectangleRoadObject implements Vehicle{
 	
 	public static float laneChangeSpeed = 1.f; // 1m/s
 
@@ -87,7 +86,7 @@ public abstract class AbstractVehicle extends AbstractRectangleRoadObject implem
 		distance = distance<0?0:distance;
 		speed += dt*acceleration;
 		speed=speed<0?0:speed;
-		roadTrajectory.move(this, distance, this);
+		roadTrajectory.move(this, distance, getDriver().getDriverRouter());
 		roadTrajectory = (RoadTrajectory) lengthy;
 		
 		// react on lane change desire

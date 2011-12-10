@@ -8,9 +8,8 @@ import java.util.Set;
 
 import ru.cos.cs.lengthy.Observation;
 import ru.cos.cs.lengthy.RegularLengthy;
-import ru.cos.sim.driver.composite.CompositeDriver;
+import ru.cos.sim.driver.CompositeDriver;
 import ru.cos.sim.driver.composite.CompositeDriverParameters;
-import ru.cos.sim.driver.composite.Obstacle;
 import ru.cos.sim.driver.composite.Perception;
 import ru.cos.sim.driver.composite.Percepts;
 import ru.cos.sim.driver.composite.TrajectoryPercepts;
@@ -89,8 +88,8 @@ public class WayJoinCase extends AbstractBehaviorCase {
 		
 		// calculate acceleration using "phantom" vehicle
 		RectangleCCRange ccRange = new RectangleCCRange();
-		idmCalculator.setSpeed(driver.getVehicle().getSpeed());
-		idmCalculator.setFrontVehicleSpeed(nearestVehicle.getSpeed());
+		idmCalculator.setSpeed(driver.getVehicle().getMovement().getSpeed());
+		idmCalculator.setFrontVehicleSpeed(nearestVehicle.getMovement().getSpeed());
 		idmCalculator.setDistance(2*joinDistance-nearestDistance-nearestVehicle.getHalfLength()-driver.getVehicle().getHalfLength());
 		float acceleration = idmCalculator.calculate();
 		ccRange.getAccelerationRange().setHigher(acceleration);

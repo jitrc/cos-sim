@@ -5,7 +5,7 @@ package ru.cos.sim.driver.composite.cases;
 
 import java.util.Set;
 
-import ru.cos.sim.driver.composite.CompositeDriver;
+import ru.cos.sim.driver.CompositeDriver;
 import ru.cos.sim.driver.composite.Perception;
 import ru.cos.sim.driver.composite.Percepts;
 import ru.cos.sim.driver.composite.TrajectoryPercepts;
@@ -64,7 +64,7 @@ public class MandatoryLaneChangingCase extends AbstractBehaviorCase {
 		RegularNode regularNode = (RegularNode) node;
 		Link incomingLink = ((Lane)fork.getPrev()).getLink();
 		int incomingLinkId = incomingLink.getId();
-		int ougtoingLinkId = driver.getRouter().getNextLinkId(incomingLinkId);
+		int ougtoingLinkId = driver.getNavigator().getNextLinkId(incomingLinkId);
 		
 		/** 1. Choose appropriate lane */
 		Set<Lane> appropriateLanes = regularNode.getAppropriateLanes(incomingLinkId, ougtoingLinkId);

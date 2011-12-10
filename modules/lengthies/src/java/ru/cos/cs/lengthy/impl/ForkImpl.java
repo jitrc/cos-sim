@@ -57,7 +57,7 @@ public class ForkImpl extends LengthyImpl implements Fork {
 	public List<Observation> observeForward(float position,	float distance, Router router) {
 		List<Observation> result;
 		if (router!=null){
-			next = router.chooseNextLengthy(this);
+			next = router.getNextLengthy(this);
 			if (next!=null && !forkedLengthies.contains(next))
 				throw new IllegalLengthiesNavigationException("Chosed by router lengthy does not forked from this fork");
 			if (next!=null)
@@ -94,7 +94,7 @@ public class ForkImpl extends LengthyImpl implements Fork {
 	 */
 	@Override
 	public void putContinuous(Continuous continuous, float position, Router router) {
-		next = router.chooseNextLengthy(this);
+		next = router.getNextLengthy(this);
 		if (!forkedLengthies.contains(next))
 			throw new IllegalLengthiesNavigationException("Chosed by router lengthy does not forked from this fork");
 		super.putContinuous(continuous, position, router);
@@ -111,7 +111,7 @@ public class ForkImpl extends LengthyImpl implements Fork {
 	 */
 	@Override
 	public void move(Point point, float distance, Router router) {
-		next = router.chooseNextLengthy(this);
+		next = router.getNextLengthy(this);
 		if (next==null)
 			throw new IllegalLengthiesNavigationException("Router has not choose any of forked lengthies to move on");
 		if (!forkedLengthies.contains(next))
@@ -122,7 +122,7 @@ public class ForkImpl extends LengthyImpl implements Fork {
 
 	@Override
 	public void move(Continuous continuous, float distance, Router router) {
-		next = router.chooseNextLengthy(this);
+		next = router.getNextLengthy(this);
 		if (!forkedLengthies.contains(next))
 			throw new IllegalLengthiesNavigationException("Chosed by router lengthy does not forked from this fork");
 		super.move(continuous, distance, router);

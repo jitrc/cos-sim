@@ -6,6 +6,7 @@ package ru.cos.sim.vehicle;
 import ru.cos.cs.lengthy.Fork;
 import ru.cos.cs.lengthy.Join;
 import ru.cos.cs.lengthy.Lengthy;
+import ru.cos.sim.driver.CompositeDriver;
 import ru.cos.sim.driver.Driver;
 import ru.cos.sim.utils.Hand;
 import ru.cos.sim.utils.Pair;
@@ -16,17 +17,7 @@ import ru.cos.sim.utils.Pair;
  */
 public class RegularVehicle extends AbstractVehicle {
 	
-	protected Driver driver;
-
-	@Override
-	public Lengthy chooseNextLengthy(Join join) {
-		return driver.chooseNextLengthy(join);
-	}
-
-	@Override
-	public Lengthy chooseNextLengthy(Fork fork) {
-		return driver.chooseNextLengthy(fork);
-	}
+	protected CompositeDriver driver;
 
 	@Override
 	protected Pair<Float, Hand> drive(float dt) {
@@ -34,11 +25,11 @@ public class RegularVehicle extends AbstractVehicle {
 		return result;
 	}
 
-	public Driver getDriver() {
+	public CompositeDriver getDriver() {
 		return driver;
 	}
 
-	public void setDriver(Driver driver) {
+	public void setDriver(CompositeDriver driver) {
 		this.driver = driver;
 	}
 

@@ -6,7 +6,7 @@ package ru.cos.sim.driver.composite.cases;
 import java.util.HashSet;
 import java.util.Set;
 
-import ru.cos.sim.driver.composite.CompositeDriver;
+import ru.cos.sim.driver.CompositeDriver;
 import ru.cos.sim.driver.composite.Percepts;
 import ru.cos.sim.driver.composite.TrajectoryPercepts;
 import ru.cos.sim.driver.composite.cases.utils.MOBILCalculator;
@@ -16,7 +16,7 @@ import ru.cos.sim.driver.composite.framework.CCRange;
 import ru.cos.sim.driver.composite.framework.Priority;
 import ru.cos.sim.driver.composite.framework.RectangleCCRange;
 import ru.cos.sim.utils.Hand;
-import ru.cos.sim.vehicle.RegularVehicle;
+import ru.cos.sim.vehicle.Vehicle;
 
 /**
  * Lane change case responsible for lane change action 
@@ -52,7 +52,7 @@ public class DesiredLaneChangingCase extends AbstractBehaviorCase {
 	}
 
 	public Hand calculateTurn(){
-		RegularVehicle vehicle = driver.getVehicle();
+		Vehicle vehicle = driver.getVehicle();
 		Percepts percepts = driver.getPercepts();
 		TrajectoryPercepts leftPercepts = percepts.getLeftPercepts();
 		TrajectoryPercepts currentPercepts = percepts.getCurrentPercepts();

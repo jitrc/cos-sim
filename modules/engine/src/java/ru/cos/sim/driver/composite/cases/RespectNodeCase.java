@@ -7,7 +7,7 @@ import java.util.List;
 
 import ru.cos.cs.lengthy.Observation;
 import ru.cos.cs.lengthy.objects.Point;
-import ru.cos.sim.driver.composite.CompositeDriver;
+import ru.cos.sim.driver.CompositeDriver;
 import ru.cos.sim.driver.composite.CompositeDriverParameters;
 import ru.cos.sim.driver.composite.Obstacle;
 import ru.cos.sim.driver.composite.Perception;

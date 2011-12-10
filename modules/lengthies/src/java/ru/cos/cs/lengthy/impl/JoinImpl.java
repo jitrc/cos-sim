@@ -55,7 +55,7 @@ public class JoinImpl extends LengthyImpl implements Join {
 	public List<Observation> observeBackward(float position, float distance, Router router) {
 		List<Observation> result;
 		if (router!=null){
-			prev = router.chooseNextLengthy(this);
+			prev = router.getPrevLengthy(this);
 			if (!joinedLengthies.contains(prev))
 				throw new IllegalLengthiesNavigationException("Chosed by router lengthy does not joined to this join");
 			result = super.observeBackward(position, distance, router);
@@ -71,7 +71,7 @@ public class JoinImpl extends LengthyImpl implements Join {
 	 */
 	@Override
 	public void putContinuousFromEndPoint(Continuous continuous, float position, Router router) {
-		prev = router.chooseNextLengthy(this);
+		prev = router.getPrevLengthy(this);
 		if (!joinedLengthies.contains(prev))
 			throw new IllegalLengthiesNavigationException("Chosed by router lengthy does not joined to this join");
 		super.putContinuousFromEndPoint(continuous, position, router);
@@ -86,7 +86,7 @@ public class JoinImpl extends LengthyImpl implements Join {
 	@Override
 	public void move(Point point, float distance, Router router) {
 		if (distance<0){
-			prev = router.chooseNextLengthy(this);
+			prev = router.getPrevLengthy(this);
 			if (!joinedLengthies.contains(prev))
 				throw new IllegalLengthiesNavigationException("Chosed by router lengthy does not joined to this join");
 		}
@@ -96,7 +96,7 @@ public class JoinImpl extends LengthyImpl implements Join {
 	
 	@Override
 	public void move(Continuous continuous, float distance, Router router) {
-		prev = router.chooseNextLengthy(this);
+		prev = router.getPrevLengthy(this);
 		if (!joinedLengthies.contains(prev))
 			throw new IllegalLengthiesNavigationException("Chosed by router lengthy does not joined to this join");
 		super.move(continuous, distance, router);

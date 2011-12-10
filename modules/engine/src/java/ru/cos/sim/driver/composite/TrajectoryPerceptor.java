@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Vector;
 
 import ru.cos.cs.lengthy.Observation;
+import ru.cos.sim.driver.CompositeDriver;
 import ru.cos.sim.road.RoadTrajectory;
 import ru.cos.sim.road.objects.RoadObject;
 
