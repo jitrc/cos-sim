@@ -75,7 +75,7 @@ public class TrafficSimulationEngine extends SimulationEngine{
 		ModelParameters modelParameters = new ModelParameters(def.getModelParametersData());
 		
 		// init services
-		ServiceLocator.setInstance(new ServiceLocator(def, roadNetwork, modelParameters, universe.getClock()));
+		ServiceLocator.init(def, roadNetwork, modelParameters, universe.getClock());
 		
 		// init agents
 		Set<TrafficAgentData> agentsData = def.getAgentsData();

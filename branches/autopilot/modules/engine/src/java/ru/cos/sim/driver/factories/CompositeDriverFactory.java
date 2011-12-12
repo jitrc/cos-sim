@@ -34,7 +34,7 @@ public class CompositeDriverFactory {
 	public static CompositeDriver createDriver(CompositeDriverData driverData, Universe universe) {
 		CompositeDriverImpl compositeDriver = new CompositeDriverImpl();
 
-		RouteProvider rp = RouteProviderFactory.createRouteProvider(getRoute(driverData));
+		RouteProvider rp = RouteProviderFactory.createRouteProvider(driverData.getDestinationNodeId());
 		
 		compositeDriver.addBehaviorCase(new RouterCase(compositeDriver, rp));
 		compositeDriver.addBehaviorCase(new CarFollowingCase(compositeDriver));
@@ -49,20 +49,10 @@ public class CompositeDriverFactory {
 		compositeDriver.addBehaviorCase(new RespectNodeCase(compositeDriver));
 		compositeDriver.addBehaviorCase(new WayJoinCase(compositeDriver));
 		
-		compositeDriver.setDestinationNodeId(driverData.getDestinationNodeId());
+		compositeDriver.setDestinationNodeId();
 		//compositeDriver.setRouteProvider(RouteProviderFactory.createRouteProvider(getRoute(driverData)));
 		compositeDriver.setParameters(driverData.getParameters());
 
 		return compositeDriver;
-	}
-
-	private static RoadRoute getRoute(CompositeDriverData driverData) {
-		List<Integer> links = driverData.getRoute();
-		if (links!=null){
-			RoadRoute route = new RoadRoute();
-			route.setLinks(links);
-			return route;
-		} else 
-			return null;
 	}
 }

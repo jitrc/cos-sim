@@ -9,7 +9,5 @@ public interface RouteProvider {
 	
 	public RoadRoute getCurrentRoute();
 	
-	public void setDestinationNodeId(int destinationNodeId);
-	
 	public void setVehicle(Vehicle vehicle);
 }

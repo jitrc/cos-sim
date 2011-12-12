@@ -13,48 +13,38 @@ import ru.cos.sim.road.RoadNetwork;
  * @author zroslaw
  */
 public class ServiceLocator {
+	private static ServiceLocator instance;
 	
-	public ServiceLocator(TrafficModelDefinition modelDefinition, RoadNetwork roadNetwork, ModelParameters modelParameters, Clock timeProvider) {
-		DijkstraRouteService routeService = new DijkstraRouteService(roadNetwork); 
-		this.initialRouteService = routeService;
-		this.updatingRouteService = new ClientFactory.Static<UpdatingRouteServiceClient>(routeService);
-		this.randomizationService = new RandomizationService.Default(modelParameters.getRandomSeed());
-		this.timeService = new TimeService.Default(timeProvider);
-		
-		try {
-			Class.forName("ru.cos.sim.services.RasDuoServicesBootstrapper")
-				 .getMethod("bootstrap", ServiceLocator.class, TrafficModelDefinition.class)
-				 .invoke(null, this, modelDefinition);
-		} catch (Exception e) {
-			System.out.println("WARNING: Could not bootstrap DUO Route Assignment Services: " + e.getMessage());
-		}
+	private RouteService routeService;
+	private RandomizationService randomizationService;
+	private TimeService timeService;
+	
+	private ServiceLocator(){
 	}
 	
-	private static ServiceLocator instance;
+	public static void init(TrafficModelDefinition modelDefinition, RoadNetwork roadNetwork, ModelParameters modelParameters, Clock timeProvider) {
+		instance = new ServiceLocator();
+		
+		instance.routeService = new DijkstraRouteService(roadNetwork); 
+		instance.randomizationService = new RandomizationService.Default(modelParameters.getRandomSeed());
+		instance.timeService = new TimeService.Default(timeProvider);
+		
+		//TODO inappropriate solution
+//		try {
+//			Class.forName("ru.cos.sim.services.RasDuoServicesBootstrapper")
+//				 .getMethod("bootstrap", ServiceLocator.class, TrafficModelDefinition.class)
+//				 .invoke(null, this, modelDefinition);
+//		} catch (Exception e) {
+//			System.out.println("WARNING: Could not bootstrap DUO Route Assignment Services: " + e.getMessage());
+//		}
+	}
+	
 	public static ServiceLocator getInstance(){
 		if (instance == null)
 			throw new RuntimeException("Service locator instance has not been set");
 		return instance;
 	}
-	public static void setInstance(ServiceLocator serviceLocator) {
-		instance = serviceLocator;
-	}
 	
-	private InitialRouteService initialRouteService;
-	public InitialRouteService getInitialRouteService() {
-		return initialRouteService;
-	}
-	protected void setInitialRouteService(InitialRouteService service) {
-		this.initialRouteService = service;
-	}
-	
-	private ClientFactory<UpdatingRouteServiceClient> updatingRouteService;
-	public UpdatingRouteServiceClient createUpdatingRouteServiceClient() {
-		return updatingRouteService.createClient();
-	}
-	protected void setUpdatingRouteServiceClientFactory(ClientFactory<UpdatingRouteServiceClient> clientFactory) {
-		this.updatingRouteService = clientFactory;
-	}
 	
 	private List<ClientFactory<ReportingServiceClient>> reportingServices = 
 		new ArrayList<ClientFactory<ReportingServiceClient>>();
@@ -69,13 +59,15 @@ public class ServiceLocator {
 		reportingServices.add(clientFactory);
 	}
 	
-	private final RandomizationService randomizationService;
 	public RandomizationService getRandomizationService() {
 		return randomizationService;
 	}
 	
-	private final TimeService timeService;
 	public TimeService getTimeSerivce() {
 		return timeService;
+	}
+	
+	public RouteService getRouteService(){
+		return routeService;
 	}
 }
