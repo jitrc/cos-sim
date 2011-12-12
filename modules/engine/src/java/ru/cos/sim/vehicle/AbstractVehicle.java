@@ -5,6 +5,7 @@ package ru.cos.sim.vehicle;
 
 import static ru.cos.sim.utils.Hand.Left;
 import static ru.cos.sim.utils.Hand.Right;
+import ru.cos.sim.Movement;
 import ru.cos.sim.exceptions.TrafficSimulationException;
 import ru.cos.sim.road.RoadTrajectory;
 import ru.cos.sim.road.link.Lane;
@@ -132,6 +133,12 @@ public abstract class AbstractVehicle extends AbstractRectangleRoadObject implem
 		
 		// report on the vehicle
 		getReporter().reportParameters(this);
+	}
+
+	@Override
+	public Movement getMovement() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/**

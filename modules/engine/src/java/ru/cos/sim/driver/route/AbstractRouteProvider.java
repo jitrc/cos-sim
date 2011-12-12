@@ -9,47 +9,17 @@ public abstract class AbstractRouteProvider implements RouteProvider {
 	private int destinationNodeId;
 	private Vehicle vehicle;
 
-	private boolean isInitialized = false;
-	protected final void checkInitialization() {
-		if (!isInitialized) {
-			init();
-			isInitialized = true;
-		}
-	}
-	
-	protected final void dropInitialization() {
-		if (isInitialized) {
-			deinit();
-			isInitialized = false; 
-		}
-	}
-	
-	protected void init() {
-
-	}
-	
-	protected void deinit() {
-		
-	}
-
 	protected int getDestinationNodeId() {
 		return destinationNodeId;
 	}
 	
-	@Override
-	public void setDestinationNodeId(int destinationNodeId) {
+	public AbstractRouteProvider(int destinationNodeId) {
 		this.destinationNodeId = destinationNodeId;
-		dropInitialization();
-	}
-	
-	protected Vehicle getVehicle() {
-		return vehicle;
 	}
 	
 	@Override
 	public void setVehicle(Vehicle vehicle) {
 		this.vehicle = vehicle;
-		dropInitialization();
 	}
 	
 	protected int getSourceLinkId() {

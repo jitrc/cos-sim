@@ -6,6 +6,7 @@ package ru.cos.sim.services;
 import java.util.List;
 
 import ru.cos.sim.driver.RoadRoute;
+import ru.cos.sim.driver.composite.framework.RoadRouteImpl;
 import ru.cos.sim.road.RoadNetwork;
 
 /**
@@ -13,7 +14,7 @@ import ru.cos.sim.road.RoadNetwork;
  * using Dijkstra's algorithm.
  * @author zroslaw
  */
-public class DijkstraRouteService implements InitialRouteService, UpdatingRouteServiceClient {
+public class DijkstraRouteService implements RouteService{
 	
 	private final DijkstraEngine dijkstraEngine;
 
@@ -29,8 +30,7 @@ public class DijkstraRouteService implements InitialRouteService, UpdatingRouteS
 	public RoadRoute findRoute(int sourceLinkId, int destinationNodeId) {
 		dijkstraEngine.searchShortestPaths(sourceLinkId, destinationNodeId);
 		List<Integer> routeLinkIds = dijkstraEngine.getShortestPath();
-		RoadRoute route = new RoadRoute();
-		route.setLinks(routeLinkIds);
+		RoadRoute route = new RoadRouteImpl(routeLinkIds);
 		return route;
 	}
 }

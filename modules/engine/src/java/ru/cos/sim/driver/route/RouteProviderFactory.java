@@ -6,11 +6,10 @@ public class RouteProviderFactory {
 
 	public static final float UPDATE_PERIOD = 10; 
 	
-	public static RouteProvider createRouteProvider(RoadRoute staticRoute) {
-		if (staticRoute != null) {
-			return new StaticRouteProvider(staticRoute); 
-		} else {
-			return new UpdatingRouteProvider(UPDATE_PERIOD);
-		}
+	public static RouteProvider createStaticProvider(int destLinkId) {
+		return new StaticRouteProvider(destLinkId); 
+	}
+	public static RouteProvider createDynamicProvider(int destLinkId) {
+		return new UpdatingRouteProvider(UPDATE_PERIOD, destLinkId);
 	}
 }

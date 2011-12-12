@@ -3,11 +3,7 @@
  */
 package ru.cos.sim.vehicle;
 
-import ru.cos.cs.lengthy.Fork;
-import ru.cos.cs.lengthy.Join;
-import ru.cos.cs.lengthy.Lengthy;
 import ru.cos.sim.driver.CompositeDriver;
-import ru.cos.sim.driver.Driver;
 import ru.cos.sim.utils.Hand;
 import ru.cos.sim.utils.Pair;
 
@@ -37,5 +33,4 @@ public class RegularVehicle extends AbstractVehicle {
 	public VehicleType getVehicleType() {
 		return VehicleType.RegularVehicle;
 	}
-
 }
