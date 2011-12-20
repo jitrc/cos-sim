@@ -556,7 +556,7 @@ public class TextureLoader {
         
        //System.out.println("Try to find: "+ref);
         //BufferedImage bufferedImage = ImageIO.read(new BufferedInputStream(getClass().getClassLoader().getResourceAsStream(ref)));
-        BufferedImage bufferedImage = ImageIO.read(Class.class.getResourceAsStream(ref));
+        BufferedImage bufferedImage = ImageIO.read(this.getClass().getResourceAsStream(ref));
         
         return bufferedImage;
     }

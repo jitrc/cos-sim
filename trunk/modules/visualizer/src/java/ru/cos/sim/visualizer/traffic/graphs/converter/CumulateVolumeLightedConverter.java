@@ -1,4 +1,6 @@
 package ru.cos.sim.visualizer.traffic.graphs.converter;
+public class CumulateVolumeLightedConverter {
+}
 /*package ru.cos.nissan.graphs.converter;
 
 import ru.cos.traffic.model.meters.output.CumulateVolumeLightedOutput;
@@ -70,5 +72,6 @@ public class CumulateVolumeLightedConverter extends AbstractConverter<VehicleCou
     @Override
     protected void highlightPoints(CumulateVolumeLightedOutput cumulateVolumeOutputLighted) {
     }
+    
 }
 */
