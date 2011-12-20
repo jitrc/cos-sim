@@ -1,4 +1,7 @@
 package ru.cos.sim.visualizer.traffic.graphs.converter;
+public class CumulateVolumeMarkedConverter {
+	
+}
 /*package ru.cos.nissan.graphs.converter;
 
 import ru.cos.nissan.graphs.classes.Point;
