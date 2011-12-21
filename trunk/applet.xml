@@ -1,4 +1,4 @@
-<project name="COS.SIM" basedir=".">
+<project name="COS.SIM.APPLET" basedir=".">
 
 	<property name="app.keystore.path" value="${basedir}/sign"/>
 	<property name="app.keystore.name" value="cos.ru"/>
@@ -30,6 +30,13 @@
 		<path location="${basedir}/${utils.name}.jar"></path>
 	</path>
 	
+	<path id="libs.path">
+		<fileset dir="${basedir}/libs">
+			<include name="*.jar"/>
+		</fileset>
+		<path location="${basedir}/resources.jar"/>
+	</path>
+	
 	<target name="make-applet" description="Export project as applet">
 		<delete failonerror="false">
 			<fileset dir="${applet.path}">
@@ -37,19 +44,66 @@
 			</fileset>
 		</delete>
 
+		<mkdir dir="${applet.path}"/>
 		<ant antfile="standard-sign.xml" target="generate-key" >
 			<property name="app.keystore" value="${app.keystore.path}"/>
 			<property name="app.keystore.name" value="${app.keystore.name}"/>
 		</ant>
 		
 		<antcall target="vis-applet-make" />
+		<antcall target="engine-applet-make" />
+		<antcall target="lengthies-applet-make" />
+		<antcall target="absf-applet-make" />
+		<antcall target="utils-applet-make" />
+		<antcall target="libs-applet-make" />
 	</target>
 	
 	<target name="vis-applet-make">
-		<ant antfile="standard-sign.xml" target="sign">
-			<property name="app.keystore" value="${app.keystore.path}"/>
-			<property name="app.keystore.name" value="${app.keystore.name}"/>
+		<ant antfile="standard-sign.xml" target="sign-unsigned">
+			<property name="app.keystore" location="${app.keystore.path}/${app.keystore.name}"/>
+			<property name="jar.destDir" value="${applet.path}"/>
 			<reference torefid="jar.path" refid="vis.path"/>
 		</ant>
 	</target>
+	
+	<target name="engine-applet-make">
+		<ant antfile="standard-sign.xml" target="sign-unsigned">
+			<property name="app.keystore" location="${app.keystore.path}/${app.keystore.name}"/>
+			<property name="jar.destDir" value="${applet.path}"/>
+			<reference torefid="jar.path" refid="engine.path"/>
+		</ant>
+	</target>
+	
+	<target name="absf-applet-make">
+		<ant antfile="standard-sign.xml" target="sign-unsigned">
+			<property name="app.keystore" location="${app.keystore.path}/${app.keystore.name}"/>
+			<property name="jar.destDir" value="${applet.path}"/>
+			<reference torefid="jar.path" refid="absf.path"/>
+		</ant>
+	</target>
+	
+	<target name="lengthies-applet-make">
+		<ant antfile="standard-sign.xml" target="sign-unsigned">
+			<property name="app.keystore" location="${app.keystore.path}/${app.keystore.name}"/>
+			<property name="jar.destDir" value="${applet.path}"/>
+			<reference torefid="jar.path" refid="len.path"/>
+		</ant>
+	</target>
+	
+	<target name="utils-applet-make">
+		<ant antfile="standard-sign.xml" target="sign-unsigned">
+			<property name="app.keystore" location="${app.keystore.path}/${app.keystore.name}"/>
+			<property name="jar.destDir" value="${applet.path}"/>
+			<reference torefid="jar.path" refid="utils.path"/>
+		</ant>
+	</target>
+	
+	<target name="libs-applet-make">
+			<ant antfile="standard-sign.xml" target="sign-all">
+				<property name="app.keystore" location="${app.keystore.path}/${app.keystore.name}"/>
+				<property name="jar.destDir" value="${applet.path}"/>
+				<property name="jar.name" value="libs"/>
+				<reference torefid="jar.path" refid="libs.path"/>
+			</ant>
+		</target>
 </project>
