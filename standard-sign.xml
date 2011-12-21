@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="Standard Project for ${project.name}" default="generate-key">
+
+	
+	<!--  Application properties -->
+	
+	<property name="app.name" value="COS.SIM" />
+	<property name="app.title" value="COS.SIM"></property>
+	<property name="app.author" value="${user.name}"></property>
+	<property name="app.company" value="COSandHt" />
+	<property name="app.alias" value="CosandHtCertificate" />
+	<property name="cert.validity" value="720" />
+	<property name="cert.keypass" value="2asd3Fwq6tyuF" />
+	<property name="app.ou" value="Traffic Dept" />
+	<property name="app.country" value="RU"/>
+	<property name="app.city" value="Dolgoprudny"/>
+	
+	<!-- 
+		Following properties must be set prior tasks running:
+		* app.keystore.path - current keystore path
+		* app.keystore.name - current keystore name
+		-->
+	<target name="generate-key" description="Generate key procedure" 
+		depends="keystore-check, create-store" />
+		
+	<target name="keystore-check">
+		<available file="${app.keystore}/${app.keystore.name}" property="keystore.exist"  />
+	</target>
+	
+	<target name="create-store" unless="keystore.exist" >
+		
+
+		<mkdir dir="${app.keystore}" />
+		<genkey keystore="${app.keystore}/${app.keystore.name}" alias="${app.alias}" storepass="${cert.keypass}"
+				validity="${cert.validity}" keyalg="RSA">
+			<dname>
+				<param name="CN" value="${app.company}"/>
+				<param name="OU" value="${app.ou}"/>
+				<param name="O" value="${app.company}"/>
+				<param name="C" value="${app.country}"/>
+				<param name="L" value="${app.city}"/>
+			</dname>
+		</genkey>
+	</target>
+	<!-- 
+		Following properties must be set prior tasks running:
+		* app.keystore - current keystore path
+		* app.keystore.name -current keystore name
+		* jar.path - path for signing jars
+		-->
+	
+	<target name="sign" description="Signing jar file">
+		<signjar alias="${app.alias}" keystore="${app.keystore}/${app.keystore.name}" storepass="${cert.keypass}"
+			lazy="true">
+			<path refid="jar.path" />
+		</signjar>
+	</target>
+</project>
