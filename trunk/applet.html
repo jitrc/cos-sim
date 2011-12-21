@@ -1,0 +1,26 @@
+<HTML>
+   
+<HEAD>
+</HEAD>
+   
+<BODY>
+    <CENTER><B>Applet JAR Example</B>
+    <BR>
+    <applet code="org.lwjgl.util.applet.AppletLoader"
+	    archive="signed.lwjgl_util_applet.jar"
+	    codebase="."
+	    width="640" height="480">
+
+	    <param name="al_title" value="COS.SIM">
+	    <param name="al_jars" value="signed.absf.jar, signed.engine.jar,
+	      signed.libs.jar, signed.lengthies.jar, signed.utils.jar,
+	      signed.visualizer.jar">
+	    <param name="al_main" value="ru.cos.sim.visualizer.traffic.gui.AppletFrame">
+	    <param name="al_windows" value="signed.windows_natives.jar">
+	    <param name="al_linux" value="signed.linux_natives.jar">
+	    <param name="al_mac" value="signed.macosx_natives.jar">
+    </applet>
+    </CENTER>
+</BODY>
+   
+</HTML>
