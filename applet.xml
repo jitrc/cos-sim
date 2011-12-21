@@ -3,7 +3,7 @@
 	<property name="app.keystore.path" value="${basedir}/sign"/>
 	<property name="app.keystore.name" value="cos.ru"/>
 	<property name="applet.path" value="${basedir}/applet"/>
-	
+
 	<property name="vis.name" value="visualizer"/>
 	<property name="absf.name" value="absf"/>
 	<property name="len.name" value="lengthies"/>
@@ -11,32 +11,47 @@
 	<property name="utils.name" value="utils"/>
 
 	<path id="vis.path">
-		<path location="${basedir}/${vis.name}.jar"></path>
+		<path location="${basedir}/${vis.name}.jar">
+		</path>
 	</path>
-	
+
 	<path id="absf.path">
-		<path location="${basedir}/${absf.name}.jar"></path>
+		<path location="${basedir}/${absf.name}.jar">
+		</path>
 	</path>
-	
+
 	<path id="len.path">
-		<path location="${basedir}/${len.name}.jar"></path>
+		<path location="${basedir}/${len.name}.jar">
+		</path>
 	</path>
-	
+
 	<path id="engine.path">
-		<path location="${basedir}/${engine.name}.jar"></path>
+		<path location="${basedir}/${engine.name}.jar">
+		</path>
 	</path>
-	
+
 	<path id="utils.path">
-		<path location="${basedir}/${utils.name}.jar"></path>
+		<path location="${basedir}/${utils.name}.jar">
+		</path>
 	</path>
-	
+
 	<path id="libs.path">
 		<fileset dir="${basedir}/libs">
 			<include name="*.jar"/>
 		</fileset>
 		<path location="${basedir}/resources.jar"/>
 	</path>
-	
+
+	<path id="natives.path">
+		<path location="${basedir}/libs/native/linux/linux_natives.jar"/>
+		<path location="${basedir}/libs/native/windows/windows_natives.jar"/>
+		<path location="${basedir}/libs/native/macosx/macosx_natives.jar"/>
+	</path>
+
+	<path id="appletlibs.path">
+		<path location="${basedir}/libs/applet/lwjgl_util_applet.jar" />
+	</path>
+
 	<target name="make-applet" description="Export project as applet">
 		<delete failonerror="false">
 			<fileset dir="${applet.path}">
@@ -49,15 +64,18 @@
 			<property name="app.keystore" value="${app.keystore.path}"/>
 			<property name="app.keystore.name" value="${app.keystore.name}"/>
 		</ant>
-		
+
 		<antcall target="vis-applet-make" />
 		<antcall target="engine-applet-make" />
 		<antcall target="lengthies-applet-make" />
 		<antcall target="absf-applet-make" />
 		<antcall target="utils-applet-make" />
 		<antcall target="libs-applet-make" />
+		<antcall target="natives-applet-make" />
+		<antcall target="applet-ownlibs-make" />
+		<antcall target="applet-staff-make" />
 	</target>
-	
+
 	<target name="vis-applet-make">
 		<ant antfile="standard-sign.xml" target="sign-unsigned">
 			<property name="app.keystore" location="${app.keystore.path}/${app.keystore.name}"/>
@@ -65,7 +83,7 @@
 			<reference torefid="jar.path" refid="vis.path"/>
 		</ant>
 	</target>
-	
+
 	<target name="engine-applet-make">
 		<ant antfile="standard-sign.xml" target="sign-unsigned">
 			<property name="app.keystore" location="${app.keystore.path}/${app.keystore.name}"/>
@@ -73,7 +91,7 @@
 			<reference torefid="jar.path" refid="engine.path"/>
 		</ant>
 	</target>
-	
+
 	<target name="absf-applet-make">
 		<ant antfile="standard-sign.xml" target="sign-unsigned">
 			<property name="app.keystore" location="${app.keystore.path}/${app.keystore.name}"/>
@@ -81,7 +99,7 @@
 			<reference torefid="jar.path" refid="absf.path"/>
 		</ant>
 	</target>
-	
+
 	<target name="lengthies-applet-make">
 		<ant antfile="standard-sign.xml" target="sign-unsigned">
 			<property name="app.keystore" location="${app.keystore.path}/${app.keystore.name}"/>
@@ -89,7 +107,7 @@
 			<reference torefid="jar.path" refid="len.path"/>
 		</ant>
 	</target>
-	
+
 	<target name="utils-applet-make">
 		<ant antfile="standard-sign.xml" target="sign-unsigned">
 			<property name="app.keystore" location="${app.keystore.path}/${app.keystore.name}"/>
@@ -97,13 +115,33 @@
 			<reference torefid="jar.path" refid="utils.path"/>
 		</ant>
 	</target>
-	
+
 	<target name="libs-applet-make">
-			<ant antfile="standard-sign.xml" target="sign-all">
-				<property name="app.keystore" location="${app.keystore.path}/${app.keystore.name}"/>
-				<property name="jar.destDir" value="${applet.path}"/>
-				<property name="jar.name" value="libs"/>
-				<reference torefid="jar.path" refid="libs.path"/>
-			</ant>
-		</target>
+		<ant antfile="standard-sign.xml" target="sign-all">
+			<property name="app.keystore" location="${app.keystore.path}/${app.keystore.name}" />
+			<property name="jar.destDir" value="${applet.path}" />
+			<property name="jar.name" value="libs" />
+			<reference torefid="jar.path" refid="libs.path" />
+		</ant>
+	</target>
+
+	<target name="natives-applet-make">
+		<ant antfile="standard-sign.xml" target="sign-unsigned">
+			<property name="app.keystore" location="${app.keystore.path}/${app.keystore.name}"/>
+			<property name="jar.destDir" value="${applet.path}"/>
+			<reference torefid="jar.path" refid="natives.path"/>
+		</ant>
+	</target>
+
+	<target name="applet-ownlibs-make">
+		<ant antfile="standard-sign.xml" target="sign-unsigned">
+			<property name="app.keystore" location="${app.keystore.path}/${app.keystore.name}" />
+			<property name="jar.destDir" value="${applet.path}" />
+			<reference torefid="jar.path" refid="appletlibs.path" />
+		</ant>
+	</target>
+	
+	<target name="applet-staff-make">
+		<copy file="${basedir}/applet.html" todir="${applet.path}"/>
+	</target>
 </project>
