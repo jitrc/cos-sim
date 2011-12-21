@@ -1,0 +1,55 @@
+<project name="COS.SIM" basedir=".">
+
+	<property name="app.keystore.path" value="${basedir}/sign"/>
+	<property name="app.keystore.name" value="cos.ru"/>
+	<property name="applet.path" value="${basedir}/applet"/>
+	
+	<property name="vis.name" value="visualizer"/>
+	<property name="absf.name" value="absf"/>
+	<property name="len.name" value="lengthies"/>
+	<property name="engine.name" value="engine"/>
+	<property name="utils.name" value="utils"/>
+
+	<path id="vis.path">
+		<path location="${basedir}/${vis.name}.jar"></path>
+	</path>
+	
+	<path id="absf.path">
+		<path location="${basedir}/${absf.name}.jar"></path>
+	</path>
+	
+	<path id="len.path">
+		<path location="${basedir}/${len.name}.jar"></path>
+	</path>
+	
+	<path id="engine.path">
+		<path location="${basedir}/${engine.name}.jar"></path>
+	</path>
+	
+	<path id="utils.path">
+		<path location="${basedir}/${utils.name}.jar"></path>
+	</path>
+	
+	<target name="make-applet" description="Export project as applet">
+		<delete failonerror="false">
+			<fileset dir="${applet.path}">
+				<include name="*.jar"/>
+			</fileset>
+		</delete>
+
+		<ant antfile="standard-sign.xml" target="generate-key" >
+			<property name="app.keystore" value="${app.keystore.path}"/>
+			<property name="app.keystore.name" value="${app.keystore.name}"/>
+		</ant>
+		
+		<antcall target="vis-applet-make" />
+	</target>
+	
+	<target name="vis-applet-make">
+		<ant antfile="standard-sign.xml" target="sign">
+			<property name="app.keystore" value="${app.keystore.path}"/>
+			<property name="app.keystore.name" value="${app.keystore.name}"/>
+			<reference torefid="jar.path" refid="vis.path"/>
+		</ant>
+	</target>
+</project>
