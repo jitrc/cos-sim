@@ -14,6 +14,7 @@
 	<property name="app.ou" value="Traffic Dept" />
 	<property name="app.country" value="RU"/>
 	<property name="app.city" value="Dolgoprudny"/>
+	<property name="temp.path" value="temp"/>
 	
 	<!-- 
 		Following properties must be set prior tasks running:
@@ -45,14 +46,68 @@
 	<!-- 
 		Following properties must be set prior tasks running:
 		* app.keystore - current keystore path
-		* app.keystore.name -current keystore name
+		* jar.destDir - Destination directory
 		* jar.path - path for signing jars
+		* jar.name - name of final jar
 		-->
 	
-	<target name="sign" description="Signing jar file">
-		<signjar alias="${app.alias}" keystore="${app.keystore}/${app.keystore.name}" storepass="${cert.keypass}"
-			lazy="true">
-			<path refid="jar.path" />
+	<target name="sign-all" description="Signing jar file">
+		<antcall target="clearManifest" inheritrefs="true" >
+			<param name="jar.dir" location="${jar.destDir}/${temp.path}" />
+			<param name="jar.dest" location="${jar.destDir}/${jar.name}.jar" />	
+		</antcall>
+		
+		<path id="refactored-jar-path">
+			<path location="${jar.destDir}/${jar.name}.jar" />
+		</path>
+		
+		<antcall target="sign-unsigned">
+			<param name="app.keystore" value="${app.keystore}"/>
+			<param name="jar.destDir" value="${jar.destDir}"/>
+			<reference torefid="jar.path" refid="refactored-jar-path" />
+		</antcall>
+		
+		<delete file="${jar.destDir}/${jar.name}.jar" failonerror="false"/>
+
+	</target>
+	
+	<target name="sign-unsigned" description="Sign unsigned jars or jars that have already the same certificate">
+		<signjar alias="${app.alias}" keystore="${app.keystore}" storepass="${cert.keypass}"
+					lazy="true" destDir="${jar.destDir}">
+					<path refid="jar.path" />
+					<globmapper from="*" to="signed.*" />
 		</signjar>
 	</target>
+	<!-- 
+			Following properties must be set prior tasks running:
+			* jar.dir - Working directory
+			* jar.dest - full where save refactored jar
+			* jar.path - reference to the source jars
+			-->
+	<target name="clearManifest" description="Clear Manifest file since it may be already signed">
+		
+		<antcall target="clean-path">
+			<param name="clean.path" location="${jar.dir}"/>
+		</antcall>
+		
+		<mkdir dir="${jar.dir}" />
+		
+		<unjar dest="${jar.dir}">
+			<path refid="jar.path" />
+		</unjar>
+		
+		<delete dir="${jar.dir}/META-INF" failonerror="false" />
+		
+		<jar basedir="${jar.dir}" destfile="${jar.dest}" />
+		
+		<antcall target="clean-path">
+			<param name="clean.path" location="${jar.dir}"/>
+		</antcall>
+	</target> 
+		
+	<target name="clean-path" if="clean.path">
+		<delete failonerror="false" includeemptydirs="true">
+			<fileset dir="${clean.path}" />
+		</delete>
+	</target>	
 </project>
